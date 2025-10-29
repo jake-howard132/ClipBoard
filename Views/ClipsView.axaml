@@ -1,0 +1,37 @@
+<Window xmlns="https://github.com/avaloniaui"
+		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+		xmlns:vm="using:ClipBoard.ViewModels"
+		xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+		xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+		mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="600"
+		x:Class="ClipBoard.Views.ClipsView"
+		x:DataType="vm:ClipsViewModel"
+
+		Title="Clips" ShowInTaskbar="False">
+
+	<Design.DataContext>
+		<!-- This only sets the DataContext for the previewer in an IDE,
+		to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
+		<vm:ClipsViewModel/>
+	</Design.DataContext>
+	<TabControl Name="ClipGroupsTabs" VerticalAlignment="Bottom" Margin="5" FontSize="16" TabStripPlacement="Bottom" ItemsSource="{Binding ClipGroups, Mode=TwoWay}" SelectedItem="{Binding SelectedTab, Mode=TwoWay}" SelectionChanged="TabControl_SelectionChanged">
+		<TabControl.ItemTemplate>
+			<DataTemplate>
+				<TextBlock Text="{Binding Name}" />
+			</DataTemplate>
+		</TabControl.ItemTemplate>
+		<TabControl.ContentTemplate>
+			<DataTemplate DataType="vm:ClipsViewModel">
+				<DockPanel LastChildFill="True">
+					<ListBox Items="{Binding SelectedTab.Clips}" SelectedItem="{Binding SelectedClip, Mode=TwoWay}" DockPanel.Dock="Top" Height="400">
+						<ListBox.ItemTemplate>
+							<DataTemplate>
+								<TextBlock Text="{Binding Content}" TextWrapping="Wrap"/>
+							</DataTemplate>
+						</ListBox.ItemTemplate>
+					</ListBox>
+				</DockPanel>
+			</DataTemplate>
+		</TabControl.ContentTemplate>
+	</TabControl>
+</Window>

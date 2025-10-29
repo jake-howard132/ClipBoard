@@ -1,0 +1,71 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+    <StartupObject>ClipBoard.Program</StartupObject>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <AvaloniaResource Include="Assets\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="ViewModels\ClipGroupViewModel.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="ViewModels\ClipGroupViewModel.cs" />
+    <None Include="ViewModels\ClipGroupsViewModel.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
+    <PackageReference Include="Avalonia.Controls.DataGrid" Version="11.3.7" />
+    <PackageReference Include="Avalonia.Desktop" Version="11.3.7" />
+    <PackageReference Include="Avalonia.Fonts.Inter" Version="11.3.7" />
+    <PackageReference Include="Avalonia.Themes.Fluent" Version="11.3.7" />
+    <PackageReference Include="Avalonia.Themes.Simple" Version="11.3.7" />
+    <PackageReference Include="EntityFramework" Version="6.5.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.10" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.10" />
+    <PackageReference Include="ReactiveUI.Avalonia" Version="11.3.8" />
+    <PackageReference Include="ReactiveUI.Avalonia.Microsoft.Extensions.DependencyInjection" Version="11.3.8" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Services\Db.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Update="Model1.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Views\ClipsView.axaml.cs">
+      <DependentUpon>ClipsView.axaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\ClipsView.axaml.cs">
+      <DependentUpon>ClipsView.axaml</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="DbContext.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>DbContext.cs</LastGenOutput>
+    </None>
+    <None Update="Model1.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Model1.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+  </ItemGroup>
+</Project>
