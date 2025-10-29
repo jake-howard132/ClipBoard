@@ -1,19 +1,20 @@
 ﻿using ClipBoard.Services;
+using ReactiveUI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace ClipBoard.Models
 {
-    public class ClipGroup
+    public class ClipGroup: ReactiveObject
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
         public string Name { get; set; } = "";
         public string? Description { get; set; }
-        public virtual ICollection<Clip> Clips { get; set; } = new List<Clip>();
+        public virtual IList<Clip> Clips { get; set; } = new List<Clip>();
         public int SortOrder { get; set; }
 
-        public ClipGroup(int id, string name, string description, ICollection<Clip> clips, int sortOrder)
+        public ClipGroup(Guid id, string name, string description, IList<Clip> clips, int sortOrder)
         {
             Id = id;
             Name = name;

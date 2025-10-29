@@ -25,7 +25,7 @@ namespace ClipBoard.ViewModels
         }
 
         public ReactiveCommand<Unit, Unit> CloseCommand { get; }
-        public ClipsViewModel()
+        public ClipGroupsViewModel()
         {
             CloseCommand = ReactiveCommand.Create(() => { });
             _selectedTab = ClipGroups.First();

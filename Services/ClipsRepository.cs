@@ -20,19 +20,42 @@ namespace ClipBoard.Services
             _db.Database.EnsureCreated();
         }
 
-        public async Task<List<ClipRecord>> GetClipsByGroupAsync(int groupId)
+        public async Task<ClipGroupRecord> GetGroupByIdAsync(Guid clipGroupId)
+        {
+            return await _db.ClipGroups
+                .Where(g => g.Id == clipGroupId)
+                .Include(g => g.Clips)
+                .Select(g => new ClipGroupRecord
+                {
+                    Name = g.Name,
+                    Description = g.Description,
+                    Clips = g.Clips.OrderBy(c => c.SortOrder).ToList(),
+                    SortOrder = g.SortOrder
+                }).FirstOrDefaultAsync();
+        }
+
+        public async Task<List<ClipRecord>> GetClipsByGroupAsync(Guid clipGroupId)
         {
             return await _db.Clips
-                .Where(c => c.ClipGroupRecordId == groupId)
+                .Where(c => c.ClipGroupId == clipGroupId)
                 .OrderByDescending(c => c.SortOrder)
                 .ToListAsync();
         }
 
-        //public async Task AddClipAsync(Clip clip)
-        //{
-        //    _db.Clips.Add(clip);
-        //    await _db.SaveChangesAsync();
-        //}
+        public async Task AddClipAsync(Guid id, Guid clipGroupId, string name, string? description, object value, string mimeType, string copyHotKey, string pasteHotKey, int sortOrder)
+        {
+            _db.Clips.Add(
+                new Clip(
+                    clipGroupId, 
+                    name, 
+                    description, 
+                    value, 
+                    mimeType, 
+                    copyHotKey, 
+                    pasteHotKey, 
+                    sortOrder).ToRecord());
+            await _db.SaveChangesAsync();
+        }
         public async Task DeleteClipAsync(int clipId)
         {
             var clip = await _db.Clips.FindAsync(clipId);

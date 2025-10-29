@@ -9,7 +9,7 @@ namespace ClipBoard.Models
 {
     public record ClipGroupRecord
     {
-        [Required] public int Id { get; init; }
+        [Required] public Guid Id { get; init; }
         [Required] public string Name { get; init; } = "";
         public string? Description { get; init; }
         public List<ClipRecord> Clips { get; init; } = new();
@@ -17,8 +17,8 @@ namespace ClipBoard.Models
     };
     public record ClipRecord
     {
-        [Required] public int Id { get; init; }
-        [Required] public int ClipGroupId { get; init; }
+        [Required] public Guid Id { get; init; }
+        [Required] public Guid ClipGroupId { get; init; }
         [Required] public ClipGroupRecord ClipGroup { get; set; } = null!;
         [Required] public string Name { get; init; } = "";
         public string? Description { get; init; }
@@ -27,7 +27,5 @@ namespace ClipBoard.Models
         public string? CopyHotKey { get; init; }
         public string? PasteHotKey { get; init; }
         public int SortOrder { get; init; }
-
-        
     }
 }

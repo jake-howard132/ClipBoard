@@ -1,30 +1,14 @@
-﻿using Avalonia;
-using Avalonia.Controls;
-using Avalonia.Controls.Documents;
-using Avalonia.Controls.Notifications;
-using Avalonia.Input;
-using Avalonia.Input.Platform;
-using Avalonia.Interactivity;
-using Avalonia.Markup.Xaml;
-using Avalonia.Media;
-using Avalonia.Platform;
-using Avalonia.Platform.Storage;
-using Avalonia.Platform.Storage.FileIO;
-using Avalonia.Threading;
+﻿
+using ReactiveUI;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Data.SqlClient;
 using System.IO;
-using System.Linq;
 
 namespace ClipBoard.Models
 {
-    public class Clip
+    public class Clip : ReactiveObject
     {
-        public int Id { get; set; }
-        public int ClipGroupId { get; set; }
+        public Guid Id { get; set; }
+        public Guid ClipGroupId { get; set; }
         public string Name { get; set; } = "";
         public string? Description { get; set; }
         public object Value { get; set; } = Array.Empty<byte>();
@@ -34,7 +18,7 @@ namespace ClipBoard.Models
         public int SortOrder { get; set; }
 
 
-        public Clip(int id, int clipGroupId, string name, string? description, object value, string mimeType, string copyHotKey, string pasteHotKey, int sortOrder)
+        public Clip(Guid id, Guid clipGroupId, string name, string? description, object value, string mimeType, string copyHotKey, string pasteHotKey, int sortOrder)
         {
             Id = id;
             ClipGroupId = clipGroupId;
@@ -50,7 +34,7 @@ namespace ClipBoard.Models
         public static Clip ToModel(ClipRecord c) =>
             new(
                 c.Id,
-                c.ClipGroupRecordId,
+                c.ClipGroupId,
                 c.Name,
                 c.Description,
                 DecodeValue(c.MimeType, c.Value),
@@ -64,7 +48,7 @@ namespace ClipBoard.Models
             new()
             {
                 Id = Id,
-                ClipGroupRecordId = ClipGroupId,
+                ClipGroupId = ClipGroupId,
                 Name = Name,
                 Description = Description,
                 Value = EncodeValue(MimeType, Value),

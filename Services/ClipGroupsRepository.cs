@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -32,12 +33,18 @@ namespace ClipBoard.Services
             })
             .ToListAsync();
         }
-        //public async Task<ClipGroup> AddGroupAsync(int id, string name, string description, int order )
-        //{
-        //    var group = new ClipGroup ( id, name, description, order );
-        //    _db.ClipGroups.Add(group);
-        //    await _db.SaveChangesAsync();
-        //    return group;
-        //}
+        public async Task<ClipGroupRecord> AddGroupAsync(Guid id, string name, string description, int sortOrder)
+        {
+            var clipGroup = new ClipGroup(
+                    id,
+                    name,
+                    description,
+                    new List<Clip>(),
+                    sortOrder).ToRecord();
+
+            _db.ClipGroups.Add(clipGroup);
+            await _db.SaveChangesAsync();
+            return clipGroup;
+        }
     }
 }

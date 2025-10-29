@@ -10,14 +10,8 @@ namespace ClipBoard.Services
         public DbSet<ClipGroupRecord> ClipGroups => Set<ClipGroupRecord>();
         public DbSet<ClipRecord> Clips => Set<ClipRecord>();
 
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        public Db(DbContextOptions<Db> options): base(options)
         {
-            var appDataPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-            var dbPath = Path.Combine(appDataPath, "ClipBoard", "ClipBoard.db");
-
-            Directory.CreateDirectory(Path.GetDirectoryName(dbPath)!);
-            optionsBuilder.UseSqlite($"Data Source={dbPath}");
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -25,6 +19,10 @@ namespace ClipBoard.Services
             {
                 g.ToTable("ClipGroups");
                 g.HasKey(g => g.Id);
+
+                g.Property(c => c.Id)
+                    .HasDefaultValueSql("lower(hex(randomblob(4))) || '-' || lower(hex(randomblob(2))) || '-4' || substr(lower(hex(randomblob(2))),2) || '-' || substr('89ab',abs(random()) % 4 + 1,1) || substr(lower(hex(randomblob(2))),2) || '-' || lower(hex(randomblob(6)))")
+                    .ValueGeneratedOnAdd();
 
                 g.Property(g => g.Name)
                     .IsRequired()
@@ -35,11 +33,13 @@ namespace ClipBoard.Services
                     .HasForeignKey(c => c.ClipGroupId)
                     .OnDelete(DeleteBehavior.Cascade); // When a group is deleted, delete its clips
             });
-            
+
             modelBuilder.Entity<ClipRecord>(c =>
             {
                 c.ToTable("Clips");
                 c.HasKey(c => c.Id);
+                c.HasIndex(c => new { c.ClipGroupId, c.SortOrder });
+
 
                 c.Property(c => c.Value)
                     .IsRequired()

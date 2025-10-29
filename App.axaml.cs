@@ -5,6 +5,7 @@ using Avalonia.Markup.Xaml;
 using ClipBoard.Services;
 using ClipBoard.ViewModels;
 using ClipBoard.Views;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using ReactiveUI;
 using Splat;
@@ -15,41 +16,25 @@ namespace ClipBoard
 {
     public partial class App : Application
     {
-        private bool desktop;
-        private TrayIcon? _trayIcon;
+        public static IServiceProvider Services { get; private set; } = null!;
         private Window? _ClipsView;
+
+        public App(IServiceProvider services)
+        {
+            Services = services;
+        }
 
         public override void Initialize() => AvaloniaXamlLoader.Load(this);
 
         public override void OnFrameworkInitializationCompleted()
         {
-            var services = new ServiceCollection();
-
-            // Database and repositories
-            services.AddSingleton<Db>();
-            services.AddSingleton<ClipsRepository>();
-            services.AddSingleton<ClipGroupsRepository>();
-
-            // ViewModels
-            services.AddTransient<ClipsViewModel>();
-
-            // Bridge Microsoft DI with Splat
-            var resolver = Locator.CurrentMutable;
-            services.UseMicrosoftDependencyResolver();
-            var sp = services.BuildServiceProvider();
-
-            // DI / Splat
-            resolver.InitializeSplat();
-            resolver.InitializeReactiveUI();
-            resolver.RegisterConstant(sp, typeof(IServiceProvider));
-
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             {
                 desktop.ShutdownMode = ShutdownMode.OnExplicitShutdown;
 
                 _ClipsView = new ClipsView
                 {
-                    DataContext = new ClipsViewModel()
+                    DataContext = Services.GetRequiredService<ClipsViewModel>()
                 };
             }
 

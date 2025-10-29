@@ -23,13 +23,13 @@
 		<TabControl.ContentTemplate>
 			<DataTemplate DataType="vm:ClipsViewModel">
 				<DockPanel LastChildFill="True">
-					<ListBox Items="{Binding SelectedTab.Clips}" SelectedItem="{Binding SelectedClip, Mode=TwoWay}" DockPanel.Dock="Top" Height="400">
+					<!--<ListBox Items="{Binding SelectedTab.Clips}" SelectedItem="{Binding SelectedTab, Mode=TwoWay}" DockPanel.Dock="Top" Height="400">
 						<ListBox.ItemTemplate>
 							<DataTemplate>
-								<TextBlock Text="{Binding Content}" TextWrapping="Wrap"/>
+								--><!--<TextBlock Text="{Binding Content}" TextWrapping="Wrap"/>--><!--
 							</DataTemplate>
 						</ListBox.ItemTemplate>
-					</ListBox>
+					</ListBox>-->
 				</DockPanel>
 			</DataTemplate>
 		</TabControl.ContentTemplate>
