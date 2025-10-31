@@ -20,7 +20,7 @@ namespace ClipBoard.Services
             _db.Database.EnsureCreated();
         }
 
-        public async Task<ClipGroupRecord> GetGroupByIdAsync(Guid clipGroupId)
+        public async Task<ClipGroupRecord?> GetGroupByIdAsync(Guid clipGroupId)
         {
             return await _db.ClipGroups
                 .Where(g => g.Id == clipGroupId)
@@ -42,21 +42,12 @@ namespace ClipBoard.Services
                 .ToListAsync();
         }
 
-        public async Task AddClipAsync(Guid id, Guid clipGroupId, string name, string? description, object value, string mimeType, string copyHotKey, string pasteHotKey, int sortOrder)
+        public async Task AddClipsAsync(IList<ClipRecord> clips)
         {
-            _db.Clips.Add(
-                new Clip(
-                    clipGroupId, 
-                    name, 
-                    description, 
-                    value, 
-                    mimeType, 
-                    copyHotKey, 
-                    pasteHotKey, 
-                    sortOrder).ToRecord());
+            await _db.Clips.AddRangeAsync(clips);
             await _db.SaveChangesAsync();
         }
-        public async Task DeleteClipAsync(int clipId)
+        public async Task DeleteClipAsync(Guid clipId)
         {
             var clip = await _db.Clips.FindAsync(clipId);
             if (clip != null)
@@ -64,6 +55,23 @@ namespace ClipBoard.Services
                 _db.Clips.Remove(clip);
                 await _db.SaveChangesAsync();
             }
+        }
+        public async Task UpdateClipOrdersAsync(Guid clipGroupId, IEnumerable<ClipRecord> clips)
+        {
+            var clipIds = clips.Select(c => c.Id).ToList();
+
+            var clipRecords = await _db.Clips
+                .Where(c => c.ClipGroupId == clipGroupId)
+                .Where(c => clipIds.Contains(c.Id))
+                .ToListAsync();
+
+            foreach (var clip in clipRecords)
+            {
+                var update = clips.First(c => c.Id == clip.Id);
+                clip.SortOrder = update.SortOrder;
+            }
+
+            await _db.SaveChangesAsync();
         }
     }
 }

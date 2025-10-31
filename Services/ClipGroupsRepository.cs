@@ -1,4 +1,5 @@
 ﻿using ClipBoard.Models;
+using ClipBoard.ViewModels;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -33,16 +34,15 @@ namespace ClipBoard.Services
             })
             .ToListAsync();
         }
-        public async Task<ClipGroupRecord> AddGroupAsync(Guid id, string name, string description, int sortOrder)
+        public async Task<ClipGroupRecord> AddClipGroupAsync(ClipGroupRecord clipGroup)
         {
-            var clipGroup = new ClipGroup(
-                    id,
-                    name,
-                    description,
-                    new List<Clip>(),
-                    sortOrder).ToRecord();
-
             _db.ClipGroups.Add(clipGroup);
+            await _db.SaveChangesAsync();
+            return clipGroup;
+        }
+        public async Task<ClipGroupRecord> UpdateGroupAsync(ClipGroupRecord clipGroup)
+        {
+            _db.ClipGroups.Update(clipGroup);
             await _db.SaveChangesAsync();
             return clipGroup;
         }

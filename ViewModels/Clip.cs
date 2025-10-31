@@ -1,14 +1,15 @@
-﻿
+﻿using ClipBoard.Models;
 using ReactiveUI;
 using System;
 using System.IO;
 
-namespace ClipBoard.Models
+namespace ClipBoard.ViewModels
 {
     public class Clip : ReactiveObject
     {
         public Guid Id { get; set; }
         public Guid ClipGroupId { get; set; }
+        public string ClipGroupName { get; set; } = "";
         public string Name { get; set; } = "";
         public string? Description { get; set; }
         public object Value { get; set; } = Array.Empty<byte>();
@@ -18,10 +19,11 @@ namespace ClipBoard.Models
         public int SortOrder { get; set; }
 
 
-        public Clip(Guid id, Guid clipGroupId, string name, string? description, object value, string mimeType, string copyHotKey, string pasteHotKey, int sortOrder)
+        public Clip(Guid id, Guid clipGroupId, string clipGroupName, string name, string? description, object value, string mimeType, string copyHotKey, string pasteHotKey, int sortOrder)
         {
             Id = id;
             ClipGroupId = clipGroupId;
+            ClipGroupName = clipGroupName;
             Name = name;
             Description = description;
             Value = value;
@@ -35,6 +37,7 @@ namespace ClipBoard.Models
             new(
                 c.Id,
                 c.ClipGroupId,
+                c.ClipGroup.Name,
                 c.Name,
                 c.Description,
                 DecodeValue(c.MimeType, c.Value),
@@ -49,14 +52,12 @@ namespace ClipBoard.Models
             {
                 Id = Id,
                 ClipGroupId = ClipGroupId,
-                Name = Name,
                 Description = Description,
                 Value = EncodeValue(MimeType, Value),
                 CopyHotKey = CopyHotKey,
                 PasteHotKey = PasteHotKey,
                 MimeType = MimeType,
                 SortOrder = SortOrder
-
             };
 
 

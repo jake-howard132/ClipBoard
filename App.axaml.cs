@@ -44,7 +44,6 @@ namespace ClipBoard
         private void NativeMenuItem_Click(object? sender, System.EventArgs e)
         {
             ClipsView sv = new ClipsView();
-            sv.DataContext = new ClipsViewModel();
         }
 
         private void ToggleClipsView()

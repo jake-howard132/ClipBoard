@@ -1,6 +1,7 @@
 <Window xmlns="https://github.com/avaloniaui"
 		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 		xmlns:vm="using:ClipBoard.ViewModels"
+		xmlns:b="using:ClipBoard.Views.Behaviors"
 		xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 		xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 		mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="600"
@@ -14,24 +15,55 @@
 		to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
 		<vm:ClipsViewModel/>
 	</Design.DataContext>
-	<TabControl Name="ClipGroupsTabs" VerticalAlignment="Bottom" Margin="5" FontSize="16" TabStripPlacement="Bottom" ItemsSource="{Binding ClipGroups, Mode=TwoWay}" SelectedItem="{Binding SelectedTab, Mode=TwoWay}" SelectionChanged="TabControl_SelectionChanged">
-		<TabControl.ItemTemplate>
-			<DataTemplate>
-				<TextBlock Text="{Binding Name}" />
-			</DataTemplate>
-		</TabControl.ItemTemplate>
-		<TabControl.ContentTemplate>
-			<DataTemplate DataType="vm:ClipsViewModel">
-				<DockPanel LastChildFill="True">
-					<!--<ListBox Items="{Binding SelectedTab.Clips}" SelectedItem="{Binding SelectedTab, Mode=TwoWay}" DockPanel.Dock="Top" Height="400">
-						<ListBox.ItemTemplate>
-							<DataTemplate>
-								--><!--<TextBlock Text="{Binding Content}" TextWrapping="Wrap"/>--><!--
-							</DataTemplate>
-						</ListBox.ItemTemplate>
-					</ListBox>-->
-				</DockPanel>
-			</DataTemplate>
-		</TabControl.ContentTemplate>
-	</TabControl>
+
+	<DockPanel>
+		<ListBox ItemsSource="{Binding Clips}" DockPanel.Dock="Top" VerticalAlignment="Stretch">
+			<ListBox.ItemTemplate>
+				<DataTemplate>
+					<TextBlock Text="{Binding Name}" TextWrapping="Wrap"/>
+				</DataTemplate>
+			</ListBox.ItemTemplate>
+		</ListBox>
+
+		<TabStrip Name="ClipGroupsTabs" VerticalAlignment="Bottom" Margin="5" FontSize="16" ItemsSource="{Binding ClipGroups}" SelectedItem="{Binding SelectedClipGroup, Mode=TwoWay}" SelectionChanged="TabControl_SelectionChanged">
+			<TabStrip.ItemTemplate>
+				<DataTemplate>
+					<Border Padding="4">
+						<Grid>
+							<!-- Label Mode -->
+							<TextBlock Text="{Binding Name}"
+									   IsVisible="{Binding !IsEditing}"
+									   b:DoubleClickBehavior.Command="{Binding StartClipGroupNameEditCommand}">
+
+								<!--								<Interaction.Behaviors>
+								<EventTriggerBehavior EventName="DoubleTapped">
+								<InvokeCommandAction Command="{Binding StartClipGroupNameEditCommand}" />
+								</EventTriggerBehavior>
+
+								</Interaction.Behaviors>-->
+							</TextBlock>
+
+							<!-- Edit Mode -->
+							<TextBox Text="{Binding Name, Mode=TwoWay}"
+									 IsVisible="{Binding IsEditing}"
+									 b:EnterKeyBehavior.ConfirmCommand="{Binding FinishClipGroupNameEditCommand}">
+
+								<Interaction.Behaviors>
+									<EventTriggerBehavior EventName="LostFocus">
+										<InvokeCommandAction Command="{Binding FinishClipGroupNameEditCommand}" />
+									</EventTriggerBehavior>
+
+								</Interaction.Behaviors>
+							</TextBox>
+						</Grid>
+					</Border>
+				</DataTemplate>
+			</TabStrip.ItemTemplate>
+			<TabStripItem>
+				<TabStripItem.Content>
+					<Button Content="+" Command="{Binding AddClipGroupCommand}" />
+				</TabStripItem.Content>
+			</TabStripItem>
+		</TabStrip>
+	</DockPanel>
 </Window>

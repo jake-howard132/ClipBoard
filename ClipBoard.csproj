@@ -14,21 +14,14 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Remove="ViewModels\ClipGroupViewModel.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="ViewModels\ClipGroupViewModel.cs" />
-    <None Include="ViewModels\ClipGroupsViewModel.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
     <PackageReference Include="Avalonia.Controls.DataGrid" Version="11.3.7" />
     <PackageReference Include="Avalonia.Desktop" Version="11.3.7" />
     <PackageReference Include="Avalonia.Fonts.Inter" Version="11.3.7" />
     <PackageReference Include="Avalonia.Themes.Fluent" Version="11.3.7" />
     <PackageReference Include="Avalonia.Themes.Simple" Version="11.3.7" />
+    <PackageReference Include="Avalonia.Xaml.Interactions" Version="11.3.0.6" />
+    <PackageReference Include="Avalonia.Xaml.Interactivity" Version="11.3.0.6" />
     <PackageReference Include="EntityFramework" Version="6.5.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.10" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.10">

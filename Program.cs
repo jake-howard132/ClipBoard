@@ -45,7 +45,6 @@ namespace ClipBoard
             services.AddScoped<ClipGroupsRepository>();
 
             // ViewModels
-            services.AddTransient<ClipGroupsViewModel>();
             services.AddTransient<ClipsViewModel>();
 
             // Bridge Microsoft DI with Splat

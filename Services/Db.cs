@@ -40,7 +40,6 @@ namespace ClipBoard.Services
                 c.HasKey(c => c.Id);
                 c.HasIndex(c => new { c.ClipGroupId, c.SortOrder });
 
-
                 c.Property(c => c.Value)
                     .IsRequired()
                     .HasColumnName("Value");

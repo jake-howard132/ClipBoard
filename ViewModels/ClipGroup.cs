@@ -1,18 +1,29 @@
-﻿using ClipBoard.Services;
+﻿using ClipBoard.Models;
+using ClipBoard.Services;
 using ReactiveUI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reactive;
 
-namespace ClipBoard.Models
+namespace ClipBoard.ViewModels
 {
-    public class ClipGroup: ReactiveObject
+    public class ClipGroup : ReactiveObject
     {
         public Guid Id { get; set; }
         public string Name { get; set; } = "";
         public string? Description { get; set; }
         public virtual IList<Clip> Clips { get; set; } = new List<Clip>();
         public int SortOrder { get; set; }
+
+        private bool _isEditing;
+        public bool IsEditing
+        {
+            get => _isEditing;
+            set => this.RaiseAndSetIfChanged(ref _isEditing, value);
+        }
+        public ReactiveCommand<Unit, Unit> StartClipGroupNameEditCommand { get; }
+        public ReactiveCommand<Unit, Unit> FinishClipGroupNameEditCommand { get; }
 
         public ClipGroup(Guid id, string name, string description, IList<Clip> clips, int sortOrder)
         {
@@ -21,6 +32,10 @@ namespace ClipBoard.Models
             Description = description;
             Clips = clips;
             SortOrder = sortOrder;
+
+            StartClipGroupNameEditCommand = ReactiveCommand.Create(() => { IsEditing = true; });
+
+            FinishClipGroupNameEditCommand = ReactiveCommand.Create(() => { IsEditing = false; });
         }
 
         public static ClipGroup ToModel(ClipGroupRecord g) =>
