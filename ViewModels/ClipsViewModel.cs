@@ -34,7 +34,7 @@ namespace ClipBoard.ViewModels
             set
             {
                 this.RaiseAndSetIfChanged(ref _selectedClipGroup, value);
-                LoadClipsAsync().RunSynchronously();
+                LoadClipsAsync();
             }
         }
 
@@ -49,6 +49,8 @@ namespace ClipBoard.ViewModels
         public ReactiveCommand<Unit, Unit> LoadGroupsCommand { get; }
         public ReactiveCommand<IEnumerable<Clip>, Unit> AddClipsCommand { get; }
         public ReactiveCommand<string, Unit> AddClipGroupCommand { get; }
+        public ReactiveCommand<ClipGroup, Unit> UpdateClipGroupCommand { get; }
+
         public ReactiveCommand<Clip, Unit> DeleteClipCommand { get; }
         public ReactiveCommand<Unit, Unit> ResequenceClipsCommand { get; }
         public ReactiveCommand<Unit, Unit> CloseCommand { get; }
@@ -61,9 +63,13 @@ namespace ClipBoard.ViewModels
             LoadGroupsCommand = ReactiveCommand.CreateFromTask(LoadGroupsAsync);
             AddClipsCommand = ReactiveCommand.CreateFromTask<IEnumerable<Clip>>(AddClipsByGroupAsync);
             AddClipGroupCommand = ReactiveCommand.CreateFromTask<string>(clipGroupName => AddClipGroupAsync(clipGroupName, null));
+            UpdateClipGroupCommand = ReactiveCommand.CreateFromTask<ClipGroup>(clipGroup => UpdateClipGroupAsync(clipGroup));
             DeleteClipCommand = ReactiveCommand.CreateFromTask<Clip>(DeleteClipAsync);
             ResequenceClipsCommand = ReactiveCommand.CreateFromTask(ResequenceClips);
             CloseCommand = ReactiveCommand.Create(() => { });
+
+            ClipGroups.Add(new ClipGroup(default(Guid), "sdfasdf", null, new List<Clip>(), 0));
+            ClipGroups.Add(new ClipGroup(default(Guid), "sdfsdfsdfasdf", null, new List<Clip>(), 1));
         }
 
         private async Task LoadGroupsAsync()
@@ -148,10 +154,16 @@ namespace ClipBoard.ViewModels
 
             ClipGroups.Add(clipGroup);
         }
-        private async Task RenameClipGroupAsync(ClipGroup clipGroup, string newClipGroupName)
+        private async Task UpdateClipGroupAsync(ClipGroup clipGroup)
         {
-            clipGroup.Name = newClipGroupName;
-            var record = await _clipGroupsRepository.UpdateGroupAsync(clipGroup.ToRecord());
+            clipGroup.FinishClipGroupNameEditCommand.Execute().Subscribe();
+
+            var index = ClipGroups.ToList().FindIndex(g => g.Id == clipGroup.Id);
+            if (index >= 0)
+            {
+                ClipGroups[index] = clipGroup;
+            }
+            await _clipGroupsRepository.UpdateGroupAsync(clipGroup.ToRecord());
         }
 
         private async Task DeleteClipAsync(Clip c)

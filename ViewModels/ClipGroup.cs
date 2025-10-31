@@ -22,6 +22,8 @@ namespace ClipBoard.ViewModels
             get => _isEditing;
             set => this.RaiseAndSetIfChanged(ref _isEditing, value);
         }
+        public sealed class AddButtonMarker { } // sentinel type
+
         public ReactiveCommand<Unit, Unit> StartClipGroupNameEditCommand { get; }
         public ReactiveCommand<Unit, Unit> FinishClipGroupNameEditCommand { get; }
 

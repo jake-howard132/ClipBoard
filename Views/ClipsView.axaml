@@ -3,6 +3,7 @@
 		xmlns:vm="using:ClipBoard.ViewModels"
 		xmlns:b="using:ClipBoard.Views.Behaviors"
 		xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+		xmlns:emit="using:System.Reflection.Emit"
 		xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 		mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="600"
 		x:Class="ClipBoard.Views.ClipsView"
@@ -19,51 +20,33 @@
 	<DockPanel>
 		<ListBox ItemsSource="{Binding Clips}" DockPanel.Dock="Top" VerticalAlignment="Stretch">
 			<ListBox.ItemTemplate>
-				<DataTemplate>
+				<DataTemplate DataType="{x:Type vm:Clip}">
 					<TextBlock Text="{Binding Name}" TextWrapping="Wrap"/>
 				</DataTemplate>
 			</ListBox.ItemTemplate>
 		</ListBox>
 
-		<TabStrip Name="ClipGroupsTabs" VerticalAlignment="Bottom" Margin="5" FontSize="16" ItemsSource="{Binding ClipGroups}" SelectedItem="{Binding SelectedClipGroup, Mode=TwoWay}" SelectionChanged="TabControl_SelectionChanged">
-			<TabStrip.ItemTemplate>
+		<TabControl x:Name="ClipGroupsTabs" VerticalAlignment="Bottom" TabStripPlacement="Bottom" Margin="5" FontSize="16" ItemsSource="{Binding ClipGroups}" SelectedItem="{Binding SelectedClipGroup, Mode=TwoWay}" SelectionChanged="TabControl_SelectionChanged">
+			<TabControl.ItemTemplate>
 				<DataTemplate>
-					<Border Padding="4">
-						<Grid>
-							<!-- Label Mode -->
-							<TextBlock Text="{Binding Name}"
-									   IsVisible="{Binding !IsEditing}"
-									   b:DoubleClickBehavior.Command="{Binding StartClipGroupNameEditCommand}">
+            <Grid>
+                <!-- Editing mode -->
+                <TextBox Text="{Binding Name, Mode=TwoWay}"
+                         IsVisible="{Binding IsEditing}"
+                         GotFocus="TextBox_GotFocus"
+                         b:EnterKeyBehavior.ConfirmCommand="{Binding DataContext.ConfirmCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                         b:EnterKeyBehavior.CommandParameter="{Binding}"
+                         b:FocusLossBehavior.Command="{Binding DataContext.CancelEditCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                         b:FocusLossBehavior.CommandParameter="{Binding}" />
 
-								<!--								<Interaction.Behaviors>
-								<EventTriggerBehavior EventName="DoubleTapped">
-								<InvokeCommandAction Command="{Binding StartClipGroupNameEditCommand}" />
-								</EventTriggerBehavior>
-
-								</Interaction.Behaviors>-->
-							</TextBlock>
-
-							<!-- Edit Mode -->
-							<TextBox Text="{Binding Name, Mode=TwoWay}"
-									 IsVisible="{Binding IsEditing}"
-									 b:EnterKeyBehavior.ConfirmCommand="{Binding FinishClipGroupNameEditCommand}">
-
-								<Interaction.Behaviors>
-									<EventTriggerBehavior EventName="LostFocus">
-										<InvokeCommandAction Command="{Binding FinishClipGroupNameEditCommand}" />
-									</EventTriggerBehavior>
-
-								</Interaction.Behaviors>
-							</TextBox>
-						</Grid>
-					</Border>
+                <!-- Display mode -->
+                <TextBlock Text="{Binding Name}"
+                           IsVisible="{Binding IsEditing, Converter={StaticResource InverseBoolConverter}}"
+                           b:DoubleClickBehavior.Command="{Binding StartClipGroupNameEditCommand}" />
+            </Grid>
 				</DataTemplate>
-			</TabStrip.ItemTemplate>
-			<TabStripItem>
-				<TabStripItem.Content>
-					<Button Content="+" Command="{Binding AddClipGroupCommand}" />
-				</TabStripItem.Content>
-			</TabStripItem>
-		</TabStrip>
+			</TabControl.ItemTemplate>
+			<TabItem Header="+" PointerReleased="AddClipGroup_PointerReleased"/>
+		</TabControl>
 	</DockPanel>
 </Window>
