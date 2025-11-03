@@ -36,23 +36,16 @@ namespace ClipBoard
         {
             var services = new ServiceCollection();
 
-            services.AddDbContext<Db>(options =>
-            options.UseSqlite("Data Source=ClipBoard.db"));
+            services
+                .AddDbContext<Db>(options => options.UseSqlite("Data Source=ClipBoard.db"))
+                .AddScoped<ClipsRepository>()
+                .AddScoped<ClipGroupsRepository>()
+                .AddTransient<ClipsViewModel>()
+                .UseMicrosoftDependencyResolver();
 
-
-            // Database and repositories
-            services.AddScoped<ClipsRepository>();
-            services.AddScoped<ClipGroupsRepository>();
-
-            // ViewModels
-            services.AddTransient<ClipsViewModel>();
-
-            // Bridge Microsoft DI with Splat
-            var resolver = Locator.CurrentMutable;
-            services.UseMicrosoftDependencyResolver();
             var sp = services.BuildServiceProvider();
 
-            // DI / Splat
+            var resolver = Locator.CurrentMutable;
             resolver.InitializeSplat();
             resolver.InitializeReactiveUI();
             resolver.RegisterConstant(sp, typeof(IServiceProvider));

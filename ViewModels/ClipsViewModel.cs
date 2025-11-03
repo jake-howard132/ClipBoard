@@ -3,6 +3,7 @@ using Avalonia.Collections;
 using Avalonia.Controls;
 using Avalonia.Data.Converters;
 using ClipBoard.Services;
+using DynamicData;
 using ReactiveUI;
 using ReactiveUI.Avalonia;
 using System;
@@ -25,7 +26,6 @@ namespace ClipBoard.ViewModels
 
         // UI Properties
         public ObservableCollection<ClipGroup> ClipGroups { get; set; } = new();
-        public ObservableCollection<Clip> Clips { get; set; } = new();
 
         private ClipGroup? _selectedClipGroup;
         public ClipGroup? SelectedClipGroup
@@ -47,10 +47,10 @@ namespace ClipBoard.ViewModels
 
         // Commands
         public ReactiveCommand<Unit, Unit> LoadGroupsCommand { get; }
-        public ReactiveCommand<IEnumerable<Clip>, Unit> AddClipsCommand { get; }
         public ReactiveCommand<string, Unit> AddClipGroupCommand { get; }
+        public ReactiveCommand<IList<Clip>, Unit> AddClipsCommand { get; }
         public ReactiveCommand<ClipGroup, Unit> UpdateClipGroupCommand { get; }
-
+        public ReactiveCommand<ClipGroup, Unit> CancelClipGroupUpdateCommand { get; }
         public ReactiveCommand<Clip, Unit> DeleteClipCommand { get; }
         public ReactiveCommand<Unit, Unit> ResequenceClipsCommand { get; }
         public ReactiveCommand<Unit, Unit> CloseCommand { get; }
@@ -61,9 +61,10 @@ namespace ClipBoard.ViewModels
             _clipsRepository = clipsRepository;
 
             LoadGroupsCommand = ReactiveCommand.CreateFromTask(LoadGroupsAsync);
-            AddClipsCommand = ReactiveCommand.CreateFromTask<IEnumerable<Clip>>(AddClipsByGroupAsync);
+            AddClipsCommand = ReactiveCommand.CreateFromTask<IList<Clip>>(AddClipsByGroupAsync);
             AddClipGroupCommand = ReactiveCommand.CreateFromTask<string>(clipGroupName => AddClipGroupAsync(clipGroupName, null));
             UpdateClipGroupCommand = ReactiveCommand.CreateFromTask<ClipGroup>(clipGroup => UpdateClipGroupAsync(clipGroup));
+            CancelClipGroupUpdateCommand = ReactiveCommand.Create<ClipGroup>(clipGroup => clipGroup.CancelEdit());
             DeleteClipCommand = ReactiveCommand.CreateFromTask<Clip>(DeleteClipAsync);
             ResequenceClipsCommand = ReactiveCommand.CreateFromTask(ResequenceClips);
             CloseCommand = ReactiveCommand.Create(() => { });
@@ -89,28 +90,6 @@ namespace ClipBoard.ViewModels
         private async Task LoadClipsAsync()
         {
             var updatedGroup = await _clipsRepository.GetGroupByIdAsync(_selectedClipGroup.Id);
-
-            Clips.Clear();
-
-            if (updatedGroup == null || updatedGroup.Clips == null)
-                return;
-
-            foreach (var clip in updatedGroup.Clips.OrderBy(c => c.SortOrder))
-            {
-                Clips.Add(
-                    new Clip(
-                        clip.Id,
-                        clip.ClipGroupId,
-                        updatedGroup.Name,
-                        clip.Name,
-                        clip.Description,
-                        clip.Value,
-                        clip.MimeType,
-                        clip.CopyHotKey ?? "",
-                        clip.PasteHotKey ?? "",
-                        clip.SortOrder
-                    ));
-            }
         }
 
         private async Task AddClipsByGroupAsync(IEnumerable<Clip> newClips)
@@ -118,28 +97,16 @@ namespace ClipBoard.ViewModels
             var newClipRecords = newClips.Select(c => c.ToRecord()).ToList();
             var clipGroups = newClips.GroupBy(c => c.ClipGroupId);
 
-            foreach (var clipGroup in clipGroups)
+            foreach (var group in clipGroups)
             {
-                var existing = Clips
-                .Where(c => c.ClipGroupId == clipGroup.Key)
-                .OrderBy(c => c.SortOrder)
-                .ToList();
-
-                int startingOrder = existing.Count;
-
-                // Append the new clips with orders after existing ones
-                int i = 0;
-                foreach (var clip in clipGroup)
-                {
-                    clip.SortOrder = startingOrder + i;
-                    Clips.Add(clip);
-                    i++;
-                }
+                var clipGroup = ClipGroups.FirstOrDefault(g => g.Id == group.Key);
+                clipGroup?.Clips.AddRange(group.ToList());
             }
 
             await _clipsRepository.AddClipsAsync(newClipRecords);
 
             //ResequenceClips();
+
         }
         private async Task AddClipGroupAsync(string clipGroupName, string? clipGroupDescription = null)
         {
@@ -156,30 +123,28 @@ namespace ClipBoard.ViewModels
         }
         private async Task UpdateClipGroupAsync(ClipGroup clipGroup)
         {
-            clipGroup.FinishClipGroupNameEditCommand.Execute().Subscribe();
-
             var index = ClipGroups.ToList().FindIndex(g => g.Id == clipGroup.Id);
             if (index >= 0)
             {
                 ClipGroups[index] = clipGroup;
             }
+
+            clipGroup.ConfirmEdit();
             await _clipGroupsRepository.UpdateGroupAsync(clipGroup.ToRecord());
         }
-
         private async Task DeleteClipAsync(Clip c)
         {
             await _clipsRepository.DeleteClipAsync(c.Id);
-            Clips.Remove(c);
+            _selectedClipGroup.Clips.Remove(c);
             await ResequenceClips();
         }
-
         private async Task ResequenceClips()
         {
-            for (int i = 0; i < Clips.Count; i++)
+            for (int i = 0; i < _selectedClipGroup.Clips.Count; i++)
             {
-                Clips[i].SortOrder = i;
+                _selectedClipGroup.Clips[i].SortOrder = i;
             }
-            await _clipsRepository.UpdateClipOrdersAsync(_selectedClipGroup.Id, Clips.Select(c => c.ToRecord()).ToList());
+            await _clipsRepository.UpdateClipOrdersAsync(_selectedClipGroup.Id, _selectedClipGroup.Clips.Select(c => c.ToRecord()).ToList());
         }
     }
 }

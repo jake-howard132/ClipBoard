@@ -1,4 +1,5 @@
-﻿using ClipBoard.Models;
+﻿using Avalonia.Collections;
+using ClipBoard.Models;
 using ClipBoard.Services;
 using ReactiveUI;
 using System;
@@ -12,8 +13,9 @@ namespace ClipBoard.ViewModels
     {
         public Guid Id { get; set; }
         public string Name { get; set; } = "";
+        public string? OriginalName { get; private set; }
         public string? Description { get; set; }
-        public virtual IList<Clip> Clips { get; set; } = new List<Clip>();
+        public virtual IAvaloniaList<Clip> Clips { get; set; } = new AvaloniaList<Clip>();
         public int SortOrder { get; set; }
 
         private bool _isEditing;
@@ -24,20 +26,31 @@ namespace ClipBoard.ViewModels
         }
         public sealed class AddButtonMarker { } // sentinel type
 
-        public ReactiveCommand<Unit, Unit> StartClipGroupNameEditCommand { get; }
-        public ReactiveCommand<Unit, Unit> FinishClipGroupNameEditCommand { get; }
-
         public ClipGroup(Guid id, string name, string description, IList<Clip> clips, int sortOrder)
         {
             Id = id;
             Name = name;
             Description = description;
-            Clips = clips;
+            Clips = new AvaloniaList<Clip>(clips);
             SortOrder = sortOrder;
+        }
+        public void BeginEdit()
+        {
+            OriginalName = Name;
+            IsEditing = true;
+        }
+        public void ConfirmEdit()
+        {
+            OriginalName = null;
+            IsEditing = false;
+        }
+        public void CancelEdit()
+        {
+            if (OriginalName is not null)
+                Name = OriginalName;
 
-            StartClipGroupNameEditCommand = ReactiveCommand.Create(() => { IsEditing = true; });
-
-            FinishClipGroupNameEditCommand = ReactiveCommand.Create(() => { IsEditing = false; });
+            OriginalName = null;
+            IsEditing = false;
         }
 
         public static ClipGroup ToModel(ClipGroupRecord g) =>

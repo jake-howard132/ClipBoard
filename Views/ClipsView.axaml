@@ -18,32 +18,37 @@
 	</Design.DataContext>
 
 	<DockPanel>
-		<ListBox ItemsSource="{Binding Clips}" DockPanel.Dock="Top" VerticalAlignment="Stretch">
+		<ListBox ItemsSource="{Binding SelectedClipGroup.Clips}" DockPanel.Dock="Top" VerticalAlignment="Stretch">
 			<ListBox.ItemTemplate>
-				<DataTemplate DataType="{x:Type vm:Clip}">
+				<DataTemplate>
 					<TextBlock Text="{Binding Name}" TextWrapping="Wrap"/>
 				</DataTemplate>
 			</ListBox.ItemTemplate>
 		</ListBox>
 
-		<TabControl x:Name="ClipGroupsTabs" VerticalAlignment="Bottom" TabStripPlacement="Bottom" Margin="5" FontSize="16" ItemsSource="{Binding ClipGroups}" SelectedItem="{Binding SelectedClipGroup, Mode=TwoWay}" SelectionChanged="TabControl_SelectionChanged">
+		<TabControl x:Name="ClipGroupsTabs"
+					VerticalAlignment="Bottom"
+					TabStripPlacement="Bottom"
+					Margin="5"
+					FontSize="16"
+					ItemsSource="{Binding ClipGroups}"
+					SelectedItem="{Binding SelectedClipGroup, Mode=TwoWay}"
+					SelectionChanged="TabControl_SelectionChanged">
 			<TabControl.ItemTemplate>
 				<DataTemplate>
-            <Grid>
-                <!-- Editing mode -->
-                <TextBox Text="{Binding Name, Mode=TwoWay}"
-                         IsVisible="{Binding IsEditing}"
-                         GotFocus="TextBox_GotFocus"
-                         b:EnterKeyBehavior.ConfirmCommand="{Binding DataContext.ConfirmCommand, RelativeSource={RelativeSource AncestorType=Window}}"
-                         b:EnterKeyBehavior.CommandParameter="{Binding}"
-                         b:FocusLossBehavior.Command="{Binding DataContext.CancelEditCommand, RelativeSource={RelativeSource AncestorType=Window}}"
-                         b:FocusLossBehavior.CommandParameter="{Binding}" />
+					<Grid>
+						<!-- Editing mode -->
+						<TextBox Text="{Binding Name, Mode=TwoWay}"
+								 IsVisible="{Binding IsEditing}"
+								 GotFocus="TextBox_GotFocus"
+								 b:KeyBehavior.ConfirmCommand="{Binding ((vm:ClipsViewModel)DataContext).UpdateClipGroupCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+								 b:KeyBehavior.CancelCommand="{Binding ((vm:ClipsViewModel)DataContext).CancelClipGroupUpdateCommand, RelativeSource={RelativeSource AncestorType=Window}}"/>
 
-                <!-- Display mode -->
-                <TextBlock Text="{Binding Name}"
-                           IsVisible="{Binding IsEditing, Converter={StaticResource InverseBoolConverter}}"
-                           b:DoubleClickBehavior.Command="{Binding StartClipGroupNameEditCommand}" />
-            </Grid>
+						<!-- Display mode -->
+						<TextBlock Text="{Binding Name}"
+								   IsVisible="{Binding !IsEditing }"
+								   b:DoubleClickBehavior.Command="{Binding BeginEdit}" />
+					</Grid>
 				</DataTemplate>
 			</TabControl.ItemTemplate>
 			<TabItem Header="+" PointerReleased="AddClipGroup_PointerReleased"/>
