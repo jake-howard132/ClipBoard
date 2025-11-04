@@ -20,7 +20,7 @@ namespace ClipBoard.Services
             _db.Database.EnsureCreated();
         }
 
-        public async Task<ClipGroupRecord?> GetGroupByIdAsync(Guid clipGroupId)
+        public async Task<ClipGroupRecord?> GetGroupByIdAsync(int clipGroupId)
         {
             return await _db.ClipGroups
                 .Where(g => g.Id == clipGroupId)
@@ -34,7 +34,7 @@ namespace ClipBoard.Services
                 }).FirstOrDefaultAsync();
         }
 
-        public async Task<List<ClipRecord>> GetClipsByGroupAsync(Guid clipGroupId)
+        public async Task<List<ClipRecord>> GetClipsByGroupAsync(int clipGroupId)
         {
             return await _db.Clips
                 .Where(c => c.ClipGroupId == clipGroupId)
@@ -47,7 +47,7 @@ namespace ClipBoard.Services
             await _db.Clips.AddRangeAsync(clips);
             await _db.SaveChangesAsync();
         }
-        public async Task DeleteClipAsync(Guid clipId)
+        public async Task DeleteClipAsync(int clipId)
         {
             var clip = await _db.Clips.FindAsync(clipId);
             if (clip != null)
@@ -56,7 +56,7 @@ namespace ClipBoard.Services
                 await _db.SaveChangesAsync();
             }
         }
-        public async Task UpdateClipOrdersAsync(Guid clipGroupId, IEnumerable<ClipRecord> clips)
+        public async Task UpdateClipOrdersAsync(int clipGroupId, IEnumerable<ClipRecord> clips)
         {
             var clipIds = clips.Select(c => c.Id).ToList();
 

@@ -7,8 +7,8 @@ namespace ClipBoard.ViewModels
 {
     public class Clip : ReactiveObject
     {
-        public Guid Id { get; set; }
-        public Guid ClipGroupId { get; set; }
+        public int Id { get; set; }
+        public int ClipGroupId { get; set; }
         public string ClipGroupName { get; set; } = "";
         public string Name { get; set; } = "";
         public string? Description { get; set; }
@@ -19,7 +19,7 @@ namespace ClipBoard.ViewModels
         public int SortOrder { get; set; }
 
 
-        public Clip(Guid id, Guid clipGroupId, string clipGroupName, string name, string? description, object value, string mimeType, string copyHotKey, string pasteHotKey, int sortOrder)
+        public Clip(int id, int clipGroupId, string clipGroupName, string name, string? description, object value, string mimeType, string copyHotKey, string pasteHotKey, int sortOrder)
         {
             Id = id;
             ClipGroupId = clipGroupId;

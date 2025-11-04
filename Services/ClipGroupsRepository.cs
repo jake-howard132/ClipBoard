@@ -40,11 +40,29 @@ namespace ClipBoard.Services
             await _db.SaveChangesAsync();
             return clipGroup;
         }
-        public async Task<ClipGroupRecord> UpdateGroupAsync(ClipGroupRecord clipGroup)
+        public async Task UpdateGroupAsync(ClipGroupRecord clipGroup)
         {
-            _db.ClipGroups.Update(clipGroup);
-            await _db.SaveChangesAsync();
-            return clipGroup;
+            try
+            {
+                var test = await _db.ClipGroups.ToListAsync();
+                var existing = await _db.ClipGroups.FindAsync(clipGroup.Id);
+                if (existing == null) return;
+
+                existing.Name = clipGroup.Name;
+                existing.Description = clipGroup.Description;
+                existing.SortOrder = clipGroup.SortOrder;
+
+                _db.ClipGroups.Attach(existing);
+                _db.Entry(existing).Property(x => x.Id).IsModified = false; // EF ignores Id
+                _db.Entry(existing).State = EntityState.Modified;
+
+                await _db.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                var test = ex;
+            }
+
         }
     }
 }

@@ -6,13 +6,23 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reactive;
+using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace ClipBoard.ViewModels
 {
     public class ClipGroup : ReactiveObject
     {
-        public Guid Id { get; set; }
-        public string Name { get; set; } = "";
+        private readonly ClipGroupsRepository _clipGroupsRepository;
+
+        public int Id { get; set; }
+
+        private string _name;
+        public string Name
+        {
+            get => _name;
+            set => this.RaiseAndSetIfChanged(ref _name, value);
+        }
         public string? OriginalName { get; private set; }
         public string? Description { get; set; }
         public virtual IAvaloniaList<Clip> Clips { get; set; } = new AvaloniaList<Clip>();
@@ -24,37 +34,42 @@ namespace ClipBoard.ViewModels
             get => _isEditing;
             set => this.RaiseAndSetIfChanged(ref _isEditing, value);
         }
-        public sealed class AddButtonMarker { } // sentinel type
 
-        public ClipGroup(Guid id, string name, string description, IList<Clip> clips, int sortOrder)
+        public ClipGroup(ClipGroupsRepository clipGroupsRepository, int id, string name, string description, IList<Clip> clips, int sortOrder)
         {
-            Id = id;
-            Name = name;
-            Description = description;
-            Clips = new AvaloniaList<Clip>(clips);
-            SortOrder = sortOrder;
+            _clipGroupsRepository = clipGroupsRepository;
+            this.Id = id;
+            this.Name = name;
+            this.Description = description;
+            this.Clips = new AvaloniaList<Clip>(clips);
+            this.SortOrder = sortOrder;
         }
-        public void BeginEdit()
+        public ClipGroup BeginEdit()
         {
-            OriginalName = Name;
-            IsEditing = true;
+            this.OriginalName = this.Name;
+            this.IsEditing = true;
+            return this;
         }
-        public void ConfirmEdit()
+        public async Task<ClipGroup> ConfirmEdit()
         {
-            OriginalName = null;
-            IsEditing = false;
+            await _clipGroupsRepository.UpdateGroupAsync(this.ToRecord());
+            this.OriginalName = null;
+            this.IsEditing = false;
+            return this;
         }
-        public void CancelEdit()
+        public ClipGroup CancelEdit()
         {
             if (OriginalName is not null)
-                Name = OriginalName;
+                this.Name = this.OriginalName;
 
-            OriginalName = null;
-            IsEditing = false;
+            this.OriginalName = null;
+            this.IsEditing = false;
+            return this;
         }
-
-        public static ClipGroup ToModel(ClipGroupRecord g) =>
-            new(g.Id,
+        public static ClipGroup ToModel(ClipGroupsRepository clipGroupsRepository, ClipGroupRecord g) =>
+            new(
+                clipGroupsRepository,
+                g.Id,
                 g.Name,
                 g.Description ?? "",
                 g.Clips
@@ -67,13 +82,13 @@ namespace ClipBoard.ViewModels
         public ClipGroupRecord ToRecord() =>
             new()
             {
-                Id = Id,
-                Name = Name,
-                Description = Description,
-                Clips = Clips
+                Id = this.Id,
+                Name = this.Name,
+                Description = this.Description,
+                Clips = this.Clips
                     .Select(c => c.ToRecord())
                     .ToList(),
-                SortOrder = SortOrder
+                SortOrder = this.SortOrder
             };
     }
 }

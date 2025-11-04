@@ -38,9 +38,10 @@ namespace ClipBoard
 
             services
                 .AddDbContext<Db>(options => options.UseSqlite("Data Source=ClipBoard.db"))
+                .AddSingleton<ClipsViewModel>()
+                .AddTransient<ClipGroup>()
                 .AddScoped<ClipsRepository>()
                 .AddScoped<ClipGroupsRepository>()
-                .AddTransient<ClipsViewModel>()
                 .UseMicrosoftDependencyResolver();
 
             var sp = services.BuildServiceProvider();

@@ -1,12 +1,16 @@
 ﻿using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
+using ClipBoard.ViewModels;
+using ReactiveUI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reactive;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using static ClipBoard.ViewModels.ClipsViewModel;
 
 namespace ClipBoard.Views.Behaviors
 {
@@ -32,16 +36,26 @@ namespace ClipBoard.Views.Behaviors
         }
         private static void OnKeyDown(object? sender, KeyEventArgs e)
         {
-            if (sender is not Control control)
-                return;
+            if (sender is not Control textBox) return;
 
-            var parameter = control.DataContext;
-
-            if (e.Key == Key.Enter || e.Key == Key.Escape)
+            if (e.Key == Key.Enter)
             {
-                var command = GetConfirmCommand(control);
-                if (command?.CanExecute(parameter) == true)
-                    command.Execute(parameter);
+                var command = GetConfirmCommand(textBox);
+
+                if (command != null)
+                {
+                    command.Execute(command);
+                }
+
+                e.Handled = true;
+            }
+            else if (e.Key == Key.Escape)
+            {
+                var command = GetCancelCommand(textBox);
+                if (command?.CanExecute(CancelCommandProperty) == true)
+                    command.Execute(CancelCommandProperty);
+
+                e.Handled = true;
             }
         }
 

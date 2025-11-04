@@ -20,13 +20,8 @@ namespace ClipBoard.Services
                 g.ToTable("ClipGroups");
                 g.HasKey(g => g.Id);
 
-                g.Property(c => c.Id)
-                    .HasDefaultValueSql("lower(hex(randomblob(4))) || '-' || lower(hex(randomblob(2))) || '-4' || substr(lower(hex(randomblob(2))),2) || '-' || substr('89ab',abs(random()) % 4 + 1,1) || substr(lower(hex(randomblob(2))),2) || '-' || lower(hex(randomblob(6)))")
+                g.Property(cg => cg.Id)
                     .ValueGeneratedOnAdd();
-
-                g.Property(g => g.Name)
-                    .IsRequired()
-                    .HasMaxLength(200);
 
                 g.HasMany(g => g.Clips)
                     .WithOne(c => c.ClipGroup)
