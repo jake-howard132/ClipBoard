@@ -36,8 +36,12 @@ namespace ClipBoard.Services
         }
         public async Task<ClipGroupRecord> AddClipGroupAsync(ClipGroupRecord clipGroup)
         {
-            _db.ClipGroups.Add(clipGroup);
-            await _db.SaveChangesAsync();
+            await _db.ClipGroups.AddAsync(clipGroup);
+            return clipGroup;
+        }
+        public async Task<ClipGroupRecord> DeleteClipGroupAsync(ClipGroupRecord clipGroup)
+        {
+            await _db.ClipGroups.Where(g => g.Id == clipGroup.Id).ExecuteDeleteAsync();
             return clipGroup;
         }
         public async Task UpdateGroupAsync(ClipGroupRecord clipGroup)

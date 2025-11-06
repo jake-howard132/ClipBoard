@@ -12,6 +12,7 @@ using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
 using System.Reactive;
+using System.Reactive.Linq;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using Tmds.DBus.Protocol;
@@ -53,12 +54,16 @@ namespace ClipBoard.ViewModels
         // Commands
         public ReactiveCommand<Unit, Unit> LoadGroupsCommand { get; }
         public ReactiveCommand<Unit, Unit> AddClipGroupCommand { get; }
+        public ReactiveCommand<ClipGroup, Unit> DeleteClipGroupCommand { get; }
         public record RenameClipGroupParams(ClipGroup clipGroup, string newName);
         public ReactiveCommand<IList<Clip>, Unit> AddClipsCommand { get; }
         public ReactiveCommand<ClipGroup, Unit> CancelClipGroupUpdateCommand { get; }
         public ReactiveCommand<Clip, Unit> DeleteClipCommand { get; }
         public ReactiveCommand<ClipGroup, Unit> ResequenceClipsCommand { get; }
         public ReactiveCommand<Unit, Unit> CloseCommand { get; }
+
+        public Interaction<string, bool> ConfirmDelete { get; } = new();
+
 
         public ClipsViewModel(ClipsRepository clipsRepository, ClipGroupsRepository clipGroupsRepository)
         {
@@ -68,6 +73,7 @@ namespace ClipBoard.ViewModels
             LoadGroupsCommand = ReactiveCommand.CreateFromTask(LoadGroupsAsync);
             AddClipsCommand = ReactiveCommand.CreateFromTask<IList<Clip>>(AddClipsByGroupAsync);
             AddClipGroupCommand = ReactiveCommand.CreateFromTask(AddClipGroupAsync);
+            DeleteClipGroupCommand = ReactiveCommand.CreateFromTask<ClipGroup>(clipGroup => DeleteClipGroupAsync(clipGroup));
             CancelClipGroupUpdateCommand = ReactiveCommand.Create<ClipGroup>(clipGroup => clipGroup.CancelEdit());
             DeleteClipCommand = ReactiveCommand.CreateFromTask<Clip>(clip => DeleteClipAsync(clip));
             ResequenceClipsCommand = ReactiveCommand.CreateFromTask<ClipGroup>(clipGroup => ResequenceClipsAsync(clipGroup));
@@ -84,13 +90,7 @@ namespace ClipBoard.ViewModels
                 ClipGroups.Add(ClipGroup.ToModel(this._clipGroupsRepository, group));
 
             SelectedClipGroup ??= ClipGroups.FirstOrDefault();
-
-            //if (_selectedClipGroup != null)
-            //    await LoadClipsAsync(_selectedClipGroup);
         }
-        //private async Task LoadClipsAsync(ClipGroup clipGroup)
-        //{
-        //}
 
         private async Task AddClipsByGroupAsync(IEnumerable<Clip> newClips)
         {
@@ -104,9 +104,6 @@ namespace ClipBoard.ViewModels
             }
 
             await _clipsRepository.AddClipsAsync(newClipRecords);
-
-            //ResequenceClips();
-
         }
         private async Task AddClipGroupAsync()
         {
@@ -116,21 +113,25 @@ namespace ClipBoard.ViewModels
                 "New ClipGroup",
                 "",
                 new List<Clip>(),
-                ClipGroups.Count);
+                ClipGroups.Count,
+                true);
 
             var record = await _clipGroupsRepository.AddClipGroupAsync(clipGroup.ToRecord());
 
             ClipGroups.Add(ClipGroup.ToModel(this._clipGroupsRepository, record));
+
+            SelectedClipGroup = ClipGroups.Last();
+            SelectedClipGroup.IsEditing = true;
         }
-        //private async Task RenameClipGroupAsync(int clipGroupId, string newName)
-        //{
-        //    ClipGroup? clipGroup = ClipGroups.FirstOrDefault(g => g.Id == clipGroupId);
+        private async Task DeleteClipGroupAsync(ClipGroup clipGroup)
+        {
+            var result = await ConfirmDelete.Handle("Are you sure?");
+            if (!result) return;
 
-        //    if (clipGroup == null) return;
-
-        //    var clipGroupRecord = clipGroup.ConfirmEdit(newName).ToRecord();
-        //    await _clipGroupsRepository.UpdateGroupAsync(clipGroupRecord);
-        //}
+            await _clipGroupsRepository.DeleteClipGroupAsync(clipGroup.ToRecord());
+            ClipGroups.Remove(clipGroup);
+            await ResequenceClipsAsync(clipGroup);
+        }
         private async Task DeleteClipAsync(Clip clip)
         {
             var clipGroup = ClipGroups.FirstOrDefault(g => g.Id == clip.ClipGroupId);

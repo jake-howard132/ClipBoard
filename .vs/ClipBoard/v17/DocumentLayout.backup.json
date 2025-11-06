@@ -7,36 +7,52 @@
       "RelativeMoniker": "D:0:0:{07B42D93-BBC5-4D2E-9241-01731F173C9D}|ClipBoard.csproj|solutionrelative:views\\clipsview.axaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{07B42D93-BBC5-4D2E-9241-01731F173C9D}|ClipBoard.csproj|c:\\users\\jake\\documents\\github\\clipboard\\views\\clipsview.axaml||{6D5344A2-2FCD-49DE-A09D-6A14FD1B1224}",
-      "RelativeMoniker": "D:0:0:{07B42D93-BBC5-4D2E-9241-01731F173C9D}|ClipBoard.csproj|solutionrelative:views\\clipsview.axaml||{6D5344A2-2FCD-49DE-A09D-6A14FD1B1224}"
+      "AbsoluteMoniker": "D:0:0:{07B42D93-BBC5-4D2E-9241-01731F173C9D}|ClipBoard.csproj|c:\\users\\jake\\documents\\github\\clipboard\\views\\clipview.axaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{07B42D93-BBC5-4D2E-9241-01731F173C9D}|ClipBoard.csproj|solutionrelative:views\\clipview.axaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{07B42D93-BBC5-4D2E-9241-01731F173C9D}|ClipBoard.csproj|c:\\users\\jake\\documents\\github\\clipboard\\viewmodels\\clipgroup.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{07B42D93-BBC5-4D2E-9241-01731F173C9D}|ClipBoard.csproj|solutionrelative:viewmodels\\clipgroup.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{07B42D93-BBC5-4D2E-9241-01731F173C9D}|ClipBoard.csproj|c:\\users\\jake\\documents\\github\\clipboard\\views\\clipview.axaml||{6D5344A2-2FCD-49DE-A09D-6A14FD1B1224}",
+      "RelativeMoniker": "D:0:0:{07B42D93-BBC5-4D2E-9241-01731F173C9D}|ClipBoard.csproj|solutionrelative:views\\clipview.axaml||{6D5344A2-2FCD-49DE-A09D-6A14FD1B1224}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{07B42D93-BBC5-4D2E-9241-01731F173C9D}|ClipBoard.csproj|c:\\users\\jake\\documents\\github\\clipboard\\app.axaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{07B42D93-BBC5-4D2E-9241-01731F173C9D}|ClipBoard.csproj|solutionrelative:app.axaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{07B42D93-BBC5-4D2E-9241-01731F173C9D}|ClipBoard.csproj|c:\\users\\jake\\documents\\github\\clipboard\\clipboard.csproj||{04B8AB82-A572-4FEF-95CE-5222444B6B64}|",
-      "RelativeMoniker": "D:0:0:{07B42D93-BBC5-4D2E-9241-01731F173C9D}|ClipBoard.csproj|solutionrelative:clipboard.csproj||{04B8AB82-A572-4FEF-95CE-5222444B6B64}|"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{07B42D93-BBC5-4D2E-9241-01731F173C9D}|ClipBoard.csproj|c:\\users\\jake\\documents\\github\\clipboard\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{07B42D93-BBC5-4D2E-9241-01731F173C9D}|ClipBoard.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{07B42D93-BBC5-4D2E-9241-01731F173C9D}|ClipBoard.csproj|c:\\users\\jake\\documents\\github\\clipboard\\app.manifest||{FA3CD31E-987B-443A-9B81-186104E8DAC1}",
-      "RelativeMoniker": "D:0:0:{07B42D93-BBC5-4D2E-9241-01731F173C9D}|ClipBoard.csproj|solutionrelative:app.manifest||{FA3CD31E-987B-443A-9B81-186104E8DAC1}"
+      "AbsoluteMoniker": "D:0:0:{07B42D93-BBC5-4D2E-9241-01731F173C9D}|ClipBoard.csproj|c:\\users\\jake\\documents\\github\\clipboard\\clipboard.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{07B42D93-BBC5-4D2E-9241-01731F173C9D}|ClipBoard.csproj|solutionrelative:clipboard.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
     },
     {
       "AbsoluteMoniker": "D:0:0:{07B42D93-BBC5-4D2E-9241-01731F173C9D}|ClipBoard.csproj|c:\\users\\jake\\documents\\github\\clipboard\\viewmodels\\clipsviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{07B42D93-BBC5-4D2E-9241-01731F173C9D}|ClipBoard.csproj|solutionrelative:viewmodels\\clipsviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
+      "AbsoluteMoniker": "D:0:0:{07B42D93-BBC5-4D2E-9241-01731F173C9D}|ClipBoard.csproj|c:\\users\\jake\\documents\\github\\clipboard\\app.axaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{07B42D93-BBC5-4D2E-9241-01731F173C9D}|ClipBoard.csproj|solutionrelative:app.axaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{07B42D93-BBC5-4D2E-9241-01731F173C9D}|ClipBoard.csproj|c:\\users\\jake\\documents\\github\\clipboard\\views\\clipsview.axaml||{6D5344A2-2FCD-49DE-A09D-6A14FD1B1224}",
+      "RelativeMoniker": "D:0:0:{07B42D93-BBC5-4D2E-9241-01731F173C9D}|ClipBoard.csproj|solutionrelative:views\\clipsview.axaml||{6D5344A2-2FCD-49DE-A09D-6A14FD1B1224}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{07B42D93-BBC5-4D2E-9241-01731F173C9D}|ClipBoard.csproj|c:\\users\\jake\\documents\\github\\clipboard\\app.axaml||{6D5344A2-2FCD-49DE-A09D-6A14FD1B1224}",
+      "RelativeMoniker": "D:0:0:{07B42D93-BBC5-4D2E-9241-01731F173C9D}|ClipBoard.csproj|solutionrelative:app.axaml||{6D5344A2-2FCD-49DE-A09D-6A14FD1B1224}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{07B42D93-BBC5-4D2E-9241-01731F173C9D}|ClipBoard.csproj|c:\\users\\jake\\documents\\github\\clipboard\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{07B42D93-BBC5-4D2E-9241-01731F173C9D}|ClipBoard.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{07B42D93-BBC5-4D2E-9241-01731F173C9D}|ClipBoard.csproj|c:\\users\\jake\\documents\\github\\clipboard\\services\\clipgroupsrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{07B42D93-BBC5-4D2E-9241-01731F173C9D}|ClipBoard.csproj|solutionrelative:services\\clipgroupsrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{07B42D93-BBC5-4D2E-9241-01731F173C9D}|ClipBoard.csproj|c:\\users\\jake\\documents\\github\\clipboard\\viewmodels\\clipgroup.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{07B42D93-BBC5-4D2E-9241-01731F173C9D}|ClipBoard.csproj|solutionrelative:viewmodels\\clipgroup.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{07B42D93-BBC5-4D2E-9241-01731F173C9D}|ClipBoard.csproj|c:\\users\\jake\\documents\\github\\clipboard\\services\\clipsrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{07B42D93-BBC5-4D2E-9241-01731F173C9D}|ClipBoard.csproj|solutionrelative:services\\clipsrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{07B42D93-BBC5-4D2E-9241-01731F173C9D}|ClipBoard.csproj|c:\\users\\jake\\documents\\github\\clipboard\\clipboard.csproj||{04B8AB82-A572-4FEF-95CE-5222444B6B64}|",
+      "RelativeMoniker": "D:0:0:{07B42D93-BBC5-4D2E-9241-01731F173C9D}|ClipBoard.csproj|solutionrelative:clipboard.csproj||{04B8AB82-A572-4FEF-95CE-5222444B6B64}|"
     },
     {
       "AbsoluteMoniker": "D:0:0:{07B42D93-BBC5-4D2E-9241-01731F173C9D}|ClipBoard.csproj|c:\\users\\jake\\documents\\github\\clipboard\\models\\datarecords.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -51,14 +67,6 @@
       "RelativeMoniker": "D:0:0:{07B42D93-BBC5-4D2E-9241-01731F173C9D}|ClipBoard.csproj|solutionrelative:services\\db.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{07B42D93-BBC5-4D2E-9241-01731F173C9D}|ClipBoard.csproj|c:\\users\\jake\\documents\\github\\clipboard\\services\\clipsrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{07B42D93-BBC5-4D2E-9241-01731F173C9D}|ClipBoard.csproj|solutionrelative:services\\clipsrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{07B42D93-BBC5-4D2E-9241-01731F173C9D}|ClipBoard.csproj|c:\\users\\jake\\documents\\github\\clipboard\\views\\behaviors\\keybehavior.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{07B42D93-BBC5-4D2E-9241-01731F173C9D}|ClipBoard.csproj|solutionrelative:views\\behaviors\\keybehavior.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{07B42D93-BBC5-4D2E-9241-01731F173C9D}|ClipBoard.csproj|c:\\users\\jake\\documents\\github\\clipboard\\viewmodels\\plustabitem.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{07B42D93-BBC5-4D2E-9241-01731F173C9D}|ClipBoard.csproj|solutionrelative:viewmodels\\plustabitem.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
@@ -70,17 +78,17 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 26,
+          "SelectedChildIndex": 20,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 4,
               "Title": "ClipsViewModel.cs",
               "DocumentMoniker": "C:\\Users\\Jake\\Documents\\GitHub\\ClipBoard\\ViewModels\\ClipsViewModel.cs",
               "RelativeDocumentMoniker": "ViewModels\\ClipsViewModel.cs",
               "ToolTip": "C:\\Users\\Jake\\Documents\\GitHub\\ClipBoard\\ViewModels\\ClipsViewModel.cs",
               "RelativeToolTip": "ViewModels\\ClipsViewModel.cs",
-              "ViewState": "AgIAAFEAAAAAAAAAAAAjwGgAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAcAAAAAAAAAAAAAACIAAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-11-03T21:11:09.884Z",
               "IsPinned": true,
@@ -148,7 +156,82 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 3,
+              "Title": "ClipBoard",
+              "DocumentMoniker": "C:\\Users\\Jake\\Documents\\GitHub\\ClipBoard\\ClipBoard.csproj",
+              "RelativeDocumentMoniker": "ClipBoard.csproj",
+              "ToolTip": "C:\\Users\\Jake\\Documents\\GitHub\\ClipBoard\\ClipBoard.csproj",
+              "RelativeToolTip": "ClipBoard.csproj",
+              "ViewState": "AgIAAAgAAAAAAAAAAAAAAB0AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2025-11-06T19:47:44.627Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "ClipView.axaml",
+              "DocumentMoniker": "C:\\Users\\Jake\\Documents\\GitHub\\ClipBoard\\Views\\ClipView.axaml",
+              "RelativeDocumentMoniker": "Views\\ClipView.axaml",
+              "ToolTip": "C:\\Users\\Jake\\Documents\\GitHub\\ClipBoard\\Views\\ClipView.axaml",
+              "RelativeToolTip": "Views\\ClipView.axaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2025-11-06T19:40:16.928Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "ClipView.axaml.cs",
+              "DocumentMoniker": "C:\\Users\\Jake\\Documents\\GitHub\\ClipBoard\\Views\\ClipView.axaml.cs",
+              "RelativeDocumentMoniker": "Views\\ClipView.axaml.cs",
+              "ToolTip": "C:\\Users\\Jake\\Documents\\GitHub\\ClipBoard\\Views\\ClipView.axaml.cs",
+              "RelativeToolTip": "Views\\ClipView.axaml.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-06T19:32:48.837Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "App.axaml",
+              "DocumentMoniker": "C:\\Users\\Jake\\Documents\\GitHub\\ClipBoard\\App.axaml",
+              "RelativeDocumentMoniker": "App.axaml",
+              "ToolTip": "C:\\Users\\Jake\\Documents\\GitHub\\ClipBoard\\App.axaml",
+              "RelativeToolTip": "App.axaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2025-11-06T19:00:46.636Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "ClipsView.axaml.cs",
+              "DocumentMoniker": "C:\\Users\\Jake\\Documents\\GitHub\\ClipBoard\\Views\\ClipsView.axaml.cs",
+              "RelativeDocumentMoniker": "Views\\ClipsView.axaml.cs",
+              "ToolTip": "C:\\Users\\Jake\\Documents\\GitHub\\ClipBoard\\Views\\ClipsView.axaml.cs",
+              "RelativeToolTip": "Views\\ClipsView.axaml.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACkAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-05T20:27:56.469Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "ClipsView.axaml",
+              "DocumentMoniker": "C:\\Users\\Jake\\Documents\\GitHub\\ClipBoard\\Views\\ClipsView.axaml",
+              "RelativeDocumentMoniker": "Views\\ClipsView.axaml",
+              "ToolTip": "C:\\Users\\Jake\\Documents\\GitHub\\ClipBoard\\Views\\ClipsView.axaml",
+              "RelativeToolTip": "Views\\ClipsView.axaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2025-11-05T20:07:42.219Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
               "Title": "ClipBoard",
               "DocumentMoniker": "C:\\Users\\Jake\\Documents\\GitHub\\ClipBoard\\ClipBoard.csproj",
               "RelativeDocumentMoniker": "ClipBoard.csproj",
@@ -160,20 +243,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "app.manifest",
-              "DocumentMoniker": "C:\\Users\\Jake\\Documents\\GitHub\\ClipBoard\\app.manifest",
-              "RelativeDocumentMoniker": "app.manifest",
-              "ToolTip": "C:\\Users\\Jake\\Documents\\GitHub\\ClipBoard\\app.manifest",
-              "RelativeToolTip": "app.manifest",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001203|",
-              "WhenOpened": "2025-11-04T22:24:16.446Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 11,
+              "DocumentIndex": 15,
               "Title": "Db.cs",
               "DocumentMoniker": "C:\\Users\\Jake\\Documents\\GitHub\\ClipBoard\\Services\\Db.cs",
               "RelativeDocumentMoniker": "Services\\Db.cs",
@@ -186,7 +256,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 13,
               "Title": "DataRecords.cs",
               "DocumentMoniker": "C:\\Users\\Jake\\Documents\\GitHub\\ClipBoard\\Models\\DataRecords.cs",
               "RelativeDocumentMoniker": "Models\\DataRecords.cs",
@@ -199,20 +269,20 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 12,
+              "DocumentIndex": 11,
               "Title": "ClipsRepository.cs",
               "DocumentMoniker": "C:\\Users\\Jake\\Documents\\GitHub\\ClipBoard\\Services\\ClipsRepository.cs",
               "RelativeDocumentMoniker": "Services\\ClipsRepository.cs",
               "ToolTip": "C:\\Users\\Jake\\Documents\\GitHub\\ClipBoard\\Services\\ClipsRepository.cs",
               "RelativeToolTip": "Services\\ClipsRepository.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABUAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAABMAAAAAAAAAAAAQwCIAAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-11-04T21:21:43.214Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 8,
               "Title": "Program.cs",
               "DocumentMoniker": "C:\\Users\\Jake\\Documents\\GitHub\\ClipBoard\\Program.cs",
               "RelativeDocumentMoniker": "Program.cs",
@@ -225,20 +295,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 13,
-              "Title": "KeyBehavior.cs",
-              "DocumentMoniker": "C:\\Users\\Jake\\Documents\\GitHub\\ClipBoard\\Views\\Behaviors\\KeyBehavior.cs",
-              "RelativeDocumentMoniker": "Views\\Behaviors\\KeyBehavior.cs",
-              "ToolTip": "C:\\Users\\Jake\\Documents\\GitHub\\ClipBoard\\Views\\Behaviors\\KeyBehavior.cs",
-              "RelativeToolTip": "Views\\Behaviors\\KeyBehavior.cs",
-              "ViewState": "AgIAABgAAAAAAAAAAADwvzoAAAANAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-04T20:00:01.453Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 14,
+              "DocumentIndex": 16,
               "Title": "PlusTabItem.cs",
               "DocumentMoniker": "C:\\Users\\Jake\\Documents\\GitHub\\ClipBoard\\ViewModels\\PlusTabItem.cs",
               "RelativeDocumentMoniker": "ViewModels\\PlusTabItem.cs",
@@ -251,58 +308,33 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 9,
               "Title": "ClipGroupsRepository.cs",
               "DocumentMoniker": "C:\\Users\\Jake\\Documents\\GitHub\\ClipBoard\\Services\\ClipGroupsRepository.cs",
               "RelativeDocumentMoniker": "Services\\ClipGroupsRepository.cs",
               "ToolTip": "C:\\Users\\Jake\\Documents\\GitHub\\ClipBoard\\Services\\ClipGroupsRepository.cs",
               "RelativeToolTip": "Services\\ClipGroupsRepository.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAACEAAAAOAAAAAAAAAA==",
+              "ViewState": "AgIAAAkAAAAAAAAAAAAAADMAAABMAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-11-04T18:32:46.723Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "ClipsView.axaml",
-              "DocumentMoniker": "C:\\Users\\Jake\\Documents\\GitHub\\ClipBoard\\Views\\ClipsView.axaml",
-              "RelativeDocumentMoniker": "Views\\ClipsView.axaml",
-              "ToolTip": "C:\\Users\\Jake\\Documents\\GitHub\\ClipBoard\\Views\\ClipsView.axaml",
-              "RelativeToolTip": "Views\\ClipsView.axaml",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
-              "WhenOpened": "2025-11-04T18:53:02.403Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "ClipsView.axaml.cs",
-              "DocumentMoniker": "C:\\Users\\Jake\\Documents\\GitHub\\ClipBoard\\Views\\ClipsView.axaml.cs",
-              "RelativeDocumentMoniker": "Views\\ClipsView.axaml.cs",
-              "ToolTip": "C:\\Users\\Jake\\Documents\\GitHub\\ClipBoard\\Views\\ClipsView.axaml.cs",
-              "RelativeToolTip": "Views\\ClipsView.axaml.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-04T16:58:15.659Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 10,
               "Title": "ClipGroup.cs",
               "DocumentMoniker": "C:\\Users\\Jake\\Documents\\GitHub\\ClipBoard\\ViewModels\\ClipGroup.cs",
               "RelativeDocumentMoniker": "ViewModels\\ClipGroup.cs",
               "ToolTip": "C:\\Users\\Jake\\Documents\\GitHub\\ClipBoard\\ViewModels\\ClipGroup.cs",
               "RelativeToolTip": "ViewModels\\ClipGroup.cs",
-              "ViewState": "AgIAAC8AAAAAAAAAAAAIwF0AAAABAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACYAAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-11-03T21:10:20.277Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 10,
+              "DocumentIndex": 14,
               "Title": "Clip.cs",
               "DocumentMoniker": "C:\\Users\\Jake\\Documents\\GitHub\\ClipBoard\\ViewModels\\Clip.cs",
               "RelativeDocumentMoniker": "ViewModels\\Clip.cs",
@@ -315,13 +347,13 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 5,
               "Title": "App.axaml.cs",
               "DocumentMoniker": "C:\\Users\\Jake\\Documents\\GitHub\\ClipBoard\\App.axaml.cs",
               "RelativeDocumentMoniker": "App.axaml.cs",
               "ToolTip": "C:\\Users\\Jake\\Documents\\GitHub\\ClipBoard\\App.axaml.cs",
               "RelativeToolTip": "App.axaml.cs",
-              "ViewState": "AgIAABMAAAAAAAAAAAAQwDQAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACgAAAANAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-11-03T21:04:39.568Z",
               "EditorCaption": ""

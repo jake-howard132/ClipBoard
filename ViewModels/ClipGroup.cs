@@ -23,8 +23,14 @@ namespace ClipBoard.ViewModels
             get => _name;
             set => this.RaiseAndSetIfChanged(ref _name, value);
         }
-        public string? OriginalName { get; private set; }
-        public string? Description { get; set; }
+        private string OriginalName { get; set; } = "";
+
+        private string _description;
+        public string Description
+        {
+            get => _description;
+            set => this.RaiseAndSetIfChanged(ref _description, value);
+        }
         public virtual IAvaloniaList<Clip> Clips { get; set; } = new AvaloniaList<Clip>();
         public int SortOrder { get; set; }
 
@@ -35,34 +41,31 @@ namespace ClipBoard.ViewModels
             set => this.RaiseAndSetIfChanged(ref _isEditing, value);
         }
 
-        public ClipGroup(ClipGroupsRepository clipGroupsRepository, int id, string name, string description, IList<Clip> clips, int sortOrder)
+        public ClipGroup(ClipGroupsRepository clipGroupsRepository, int id, string name, string description, IEnumerable<Clip> clips, int sortOrder, bool isEditing = false)
         {
             _clipGroupsRepository = clipGroupsRepository;
             this.Id = id;
-            this.Name = name;
-            this.Description = description;
+            this._name = name;
+            this._description = description;
+            this.IsEditing = isEditing;
             this.Clips = new AvaloniaList<Clip>(clips);
             this.SortOrder = sortOrder;
         }
         public ClipGroup BeginEdit()
         {
-            this.OriginalName = this.Name;
+            this.OriginalName = _name;
             this.IsEditing = true;
             return this;
         }
         public async Task<ClipGroup> ConfirmEdit()
         {
             await _clipGroupsRepository.UpdateGroupAsync(this.ToRecord());
-            this.OriginalName = null;
             this.IsEditing = false;
             return this;
         }
         public ClipGroup CancelEdit()
         {
-            if (OriginalName is not null)
-                this.Name = this.OriginalName;
-
-            this.OriginalName = null;
+            this.Name = OriginalName;
             this.IsEditing = false;
             return this;
         }

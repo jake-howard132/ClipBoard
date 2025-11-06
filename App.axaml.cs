@@ -34,16 +34,13 @@ namespace ClipBoard
 
                 _ClipsView = new ClipsView
                 {
-                    DataContext = Services.GetRequiredService<ClipsViewModel>()
+                    DataContext = Services.GetRequiredService<ClipsViewModel>(),
+                    Height = 1000,
+                    Width = 600
                 };
             }
 
             base.OnFrameworkInitializationCompleted();
-        }
-
-        private void NativeMenuItem_Click(object? sender, System.EventArgs e)
-        {
-            ClipsView sv = new ClipsView();
         }
 
         private void ToggleClipsView()

@@ -1,10 +1,11 @@
-using Avalonia;
+﻿using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Data.Converters;
-using Avalonia.Input;
 using Avalonia.Markup.Xaml;
+using Avalonia.Threading;
 using Avalonia.VisualTree;
 using ClipBoard.ViewModels;
+using MsBox.Avalonia;
+using MsBox.Avalonia.Enums;
 using ReactiveUI;
 using ReactiveUI.Avalonia;
 
@@ -16,15 +17,25 @@ public partial class ClipsView : ReactiveWindow<ClipsViewModel>
     {
         this.WhenActivated(disposables =>
         {
-            this.ViewModel?.LoadGroupsCommand.Execute();
+            AvaloniaXamlLoader.Load(this);
+            InitializeComponent();
+
+            if (this.ViewModel is not ClipsViewModel vm) return;
+
+            vm.ConfirmDelete.RegisterHandler(async interaction =>
+            {
+                var result = await MessageBoxManager.GetMessageBoxStandard("Are you sure?", interaction.Input, ButtonEnum.YesNo).ShowAsync();
+
+                interaction.SetOutput(result == ButtonResult.Yes);
+            });
+
+            vm.LoadGroupsCommand.Execute();
         });
-        AvaloniaXamlLoader.Load(this);
-        InitializeComponent();
     }
 
     private void Window_Closing(object? sender, WindowClosingEventArgs e)
     {
-        e.Cancel = true;
         this.Hide();
+        e.Cancel = true;
     }
 }

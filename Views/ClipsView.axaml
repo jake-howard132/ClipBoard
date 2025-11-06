@@ -6,27 +6,45 @@
 		xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 		xmlns:emit="using:System.Reflection.Emit"
 		xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-		mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="600" ShowInTaskbar="True"
+		mc:Ignorable="d"
 		x:Class="ClipBoard.Views.ClipsView"
 		x:DataType="vm:ClipsViewModel"
-		Title="Clips" Closing="Window_Closing">
+		Title="ClipBoard" 
+		Closing="Window_Closing" 
+		ShowInTaskbar="True" 
+		CanMinimize="False" 
+		SizeToContent="Manual">
 
 	<Design.DataContext>
-		<!-- This only sets the DataContext for the previewer in an IDE,
-		to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
 		<vm:ClipsViewModel/>
 	</Design.DataContext>
 
-	<DockPanel>
-		<ListBox ItemsSource="{Binding SelectedClipGroup.Clips}" DockPanel.Dock="Top" VerticalAlignment="Stretch">
+	<Grid ColumnDefinitions="*" RowDefinitions="*, Auto">
+		<ListBox ItemsSource="{Binding SelectedClipGroup.Clips}"
+				 VerticalAlignment="Stretch"
+				 Background="Transparent"
+				 Grid.Row="0">
 			<ListBox.ItemTemplate>
 				<DataTemplate>
-					<TextBlock Text="{Binding Name}" TextWrapping="Wrap"/>
+					<TextBlock Text="{Binding Name}" TextWrapping="Wrap">
+						<ContextMenu>
+							<MenuItem Header="Edit Clip"/>
+							<MenuItem Header="Delete Clip"/>
+						</ContextMenu>
+					</TextBlock>
 				</DataTemplate>
 			</ListBox.ItemTemplate>
+
+			<ListBox.ContextMenu>
+				<ContextMenu>
+					<MenuItem Header="New Clip"/>
+					<MenuItem Header="Import Clips"/>
+				</ContextMenu>
+			</ListBox.ContextMenu>
 		</ListBox>
 
-		<TabControl x:Name="ClipGroupsTabs"
+		<TabControl Name="ClipGroupsTabs"
+					Grid.Row="1"
 					VerticalAlignment="Bottom"
 					TabStripPlacement="Bottom"
 					Margin="5"
@@ -44,19 +62,27 @@
 				<DataTemplate>
 					<Grid>
 						<!-- Editing mode -->
-						<TextBox Text="{Binding Name, Mode=TwoWay}"
+						<TextBox x:Name="EditTextBox"
+								 Text="{Binding Name, Mode=TwoWay}"
 								 IsVisible="{Binding IsEditing, Mode=TwoWay}"
-								 b:KeyBehavior.ConfirmCommand="{Binding ConfirmEdit}"
-								 b:KeyBehavior.CancelCommand="{Binding CancelEdit}"/>
+								 Focusable="True"
+								 b:TextBoxBehaviors.ConfirmEdit="{Binding ConfirmEdit}"
+								 b:TextBoxBehaviors.CancelEdit="{Binding CancelEdit}"
+								 b:TextBoxBehaviors.IsFocused="{Binding IsEditing}"/>
 
 						<!-- Display mode -->
 						<TextBlock Text="{Binding Name}"
 								   IsVisible="{Binding !IsEditing, Mode=TwoWay }"
-								   b:DoubleClickBehavior.Command="{Binding BeginEdit}">
+								   Focusable="True"
+								   b:TextBoxBehaviors.BeginEdit="{Binding BeginEdit}">
 							<TextBlock.ContextMenu>
 								<ContextMenu>
 									<MenuItem Header="Rename" Command="{Binding BeginEdit}"/>
-									<MenuItem Header="Delete"/>
+									<MenuItem Header="Delete"
+											  Command="{Binding $parent[Window].((vm:ClipsViewModel)DataContext).DeleteClipGroupCommand}"
+											  CommandParameter="{Binding}"/>
+									<MenuItem Header="Add Clip"/>
+									<MenuItem Header="Import Clips"/>
 								</ContextMenu>
 							</TextBlock.ContextMenu>
 						</TextBlock>
@@ -78,11 +104,10 @@
 										Command="{Binding AddClipGroupCommand}"/>
 
 							</StackPanel>
-							</ScrollViewer>
+						</ScrollViewer>
 					</DockPanel>
 				</ControlTemplate>
 			</TabControl.Template>
 		</TabControl>
-		<!--<Button Content="+" Command="{Binding AddClipGroupCommand}"/>-->
-	</DockPanel>
+	</Grid>
 </Window>
