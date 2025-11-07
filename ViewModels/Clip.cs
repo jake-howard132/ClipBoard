@@ -1,26 +1,45 @@
-﻿using ClipBoard.Models;
+﻿using Avalonia.Collections;
+using AvRichTextBox;
+using ClipBoard.Models;
+using ClipBoard.Services;
+using DocumentFormat.OpenXml.Bibliography;
 using ReactiveUI;
 using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace ClipBoard.ViewModels
 {
     public class Clip : ReactiveObject
     {
+        private readonly ClipsRepository _clipsRepository;
+
+        public Uri EditorURI { get; }
+
         public int Id { get; set; }
         public int ClipGroupId { get; set; }
         public string ClipGroupName { get; set; } = "";
         public string Name { get; set; } = "";
         public string? Description { get; set; }
-        public object Value { get; set; } = Array.Empty<byte>();
+        public virtual object Value { get; set; }
         public string MimeType { get; set; } = "";
         public string? CopyHotKey { get; set; }
         public string? PasteHotKey { get; set; }
         public int SortOrder { get; set; }
 
 
-        public Clip(int id, int clipGroupId, string clipGroupName, string name, string? description, object value, string mimeType, string copyHotKey, string pasteHotKey, int sortOrder)
+        public Clip(ClipsRepository clipsRepository, int id, int clipGroupId, string clipGroupName, string name, string? description, object value, string mimeType, string copyHotKey, string pasteHotKey, int sortOrder)
         {
+            try
+            {
+                this.EditorURI = new Uri("avares://ClipBoard/Assets/Tiptap.html");
+            }
+            catch (Exception ex)
+            {
+                var test = ex;
+            }
+
+            _clipsRepository = clipsRepository;
             Id = id;
             ClipGroupId = clipGroupId;
             ClipGroupName = clipGroupName;
@@ -33,8 +52,9 @@ namespace ClipBoard.ViewModels
             SortOrder = sortOrder;
         }
 
-        public static Clip ToModel(ClipRecord c) =>
+        public static Clip ToModel(ClipsRepository clipsRepository, ClipRecord c) =>
             new(
+                clipsRepository,
                 c.Id,
                 c.ClipGroupId,
                 c.ClipGroup.Name,

@@ -8,6 +8,8 @@ using ReactiveUI.Avalonia;
 using Splat;
 using Splat.Microsoft.Extensions.DependencyInjection;
 using System;
+using Avalonia.WebView.Desktop;
+using ClipBoard.Views;
 
 
 namespace ClipBoard
@@ -30,7 +32,8 @@ namespace ClipBoard
                         .UsePlatformDetect()
                         .WithInterFont()
                         .LogToTrace()
-                        .UseReactiveUI();
+                        .UseReactiveUI()
+                        .UseDesktopWebView();
         }
         private static IServiceProvider ConfigureServices()
         {
@@ -38,8 +41,11 @@ namespace ClipBoard
 
             services
                 .AddDbContext<Db>(options => options.UseSqlite("Data Source=ClipBoard.db"))
+                .AddSingleton<ClipView>()
                 .AddSingleton<ClipsViewModel>()
                 .AddTransient<ClipGroup>()
+                .AddTransient<Clip>()
+                .AddScoped<WindowService>()
                 .AddScoped<ClipsRepository>()
                 .AddScoped<ClipGroupsRepository>()
                 .UseMicrosoftDependencyResolver();

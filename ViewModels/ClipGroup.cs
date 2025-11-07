@@ -14,6 +14,7 @@ namespace ClipBoard.ViewModels
     public class ClipGroup : ReactiveObject
     {
         private readonly ClipGroupsRepository _clipGroupsRepository;
+        private readonly ClipsRepository _clipsRepository;
 
         public int Id { get; set; }
 
@@ -41,9 +42,10 @@ namespace ClipBoard.ViewModels
             set => this.RaiseAndSetIfChanged(ref _isEditing, value);
         }
 
-        public ClipGroup(ClipGroupsRepository clipGroupsRepository, int id, string name, string description, IEnumerable<Clip> clips, int sortOrder, bool isEditing = false)
+        public ClipGroup(ClipGroupsRepository clipGroupsRepository, ClipsRepository clipsRepository, int id, string name, string description, IEnumerable<Clip> clips, int sortOrder, bool isEditing = false)
         {
             _clipGroupsRepository = clipGroupsRepository;
+            _clipsRepository = clipsRepository;
             this.Id = id;
             this._name = name;
             this._description = description;
@@ -69,15 +71,16 @@ namespace ClipBoard.ViewModels
             this.IsEditing = false;
             return this;
         }
-        public static ClipGroup ToModel(ClipGroupsRepository clipGroupsRepository, ClipGroupRecord g) =>
+        public static ClipGroup ToModel(ClipGroupsRepository clipGroupsRepository, ClipsRepository clipsRepository, ClipGroupRecord g) =>
             new(
                 clipGroupsRepository,
+                clipsRepository,
                 g.Id,
                 g.Name,
                 g.Description ?? "",
                 g.Clips
                     .OrderBy(c => c.SortOrder)
-                    .Select(c => Clip.ToModel(c))
+                    .Select(c => Clip.ToModel(clipsRepository, c))
                     .ToList(),
                 g.SortOrder
             );

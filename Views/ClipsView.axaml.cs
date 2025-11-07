@@ -29,7 +29,7 @@ public partial class ClipsView : ReactiveWindow<ClipsViewModel>
                 interaction.SetOutput(result == ButtonResult.Yes);
             });
 
-            vm.LoadGroupsCommand.Execute();
+            vm.LoadClipGroupsCommand.Execute();
         });
     }
 

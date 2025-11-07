@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <script type="module">
+  import { Editor } from 'https://cdn.jsdelivr.net/npm/@tiptap/core@2/dist/core.esm.js';
+  import StarterKit from 'https://cdn.jsdelivr.net/npm/@tiptap/starter-kit@2/dist/starter-kit.esm.js';
+
+  window.editor = new Editor({
+    element: document.getElementById('editor'),
+    extensions: [StarterKit],
+    content: '<p>Hello from WebView.Avalonia + Tiptap!</p>',
+    onUpdate: () => {
+      const html = window.editor.getHTML();
+      window.chrome.webview.postMessage(html);
+    }
+  });
+
+  window.bold = () => window.editor.chain().focus().toggleBold().run();
+  window.italic = () => window.editor.chain().focus().toggleItalic().run();
+    </script>
+    <style>
+        #editor {
+            border: 1px solid #aaa;
+            padding: 10px;
+            min-height: 200px;
+        }
+    </style>
+</head>
+<body>
+    <div id="editor"></div>
+</body>
+</html>

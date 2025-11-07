@@ -2,6 +2,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
+using AvaloniaWebView;
 using ClipBoard.Services;
 using ClipBoard.ViewModels;
 using ClipBoard.Views;
@@ -41,6 +42,11 @@ namespace ClipBoard
             }
 
             base.OnFrameworkInitializationCompleted();
+        }
+        public override void RegisterServices()
+        {
+            base.RegisterServices();
+            AvaloniaWebViewBuilder.Initialize(default);
         }
 
         private void ToggleClipsView()

@@ -1,13 +1,42 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
+using Avalonia.Media;
+using AvaloniaWebView;
+using ClipBoard.ViewModels;
+using ReactiveUI;
+using ReactiveUI.Avalonia;
+using System;
+using System.Drawing;
+using System.IO;
+using System.Security.Policy;
+using WebKit;
 
 namespace ClipBoard.Views;
 
-public partial class ClipView : Window
+public partial class ClipView : ReactiveWindow<Clip>
 {
     public ClipView()
     {
         InitializeComponent();
+        webView.Background = new SolidColorBrush(Colors.White);
+        webView.HtmlContent = @"<!doctype html>
+                                <html>
+                                  <head>
+                                    <meta charset=""utf-8"" />
+                                  </head>
+                                  <body>
+                                    <div class=""element""></div>
+                                    <script type=""module"">
+                                      import { Editor } from 'https://esm.sh/@tiptap/core'
+                                      import StarterKit from 'https://esm.sh/@tiptap/starter-kit'
+                                      const editor = new Editor({
+                                        element: document.querySelector('.element'),
+                                        extensions: [StarterKit],
+                                        content: '<p>Hello World!</p>',
+                                      })
+                                    </script>
+                                  </body>
+                                </html>";
     }
-}
+};
