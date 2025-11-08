@@ -2,8 +2,12 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 using Avalonia.Media;
+using Avalonia.Platform;
+using Avalonia.Platform.Storage;
 using AvaloniaWebView;
 using ClipBoard.ViewModels;
+using DocumentFormat.OpenXml.Bibliography;
+using DocumentFormat.OpenXml.Office2016.Drawing.Command;
 using ReactiveUI;
 using ReactiveUI.Avalonia;
 using System;
@@ -20,23 +24,6 @@ public partial class ClipView : ReactiveWindow<Clip>
     {
         InitializeComponent();
         webView.Background = new SolidColorBrush(Colors.White);
-        webView.HtmlContent = @"<!doctype html>
-                                <html>
-                                  <head>
-                                    <meta charset=""utf-8"" />
-                                  </head>
-                                  <body>
-                                    <div class=""element""></div>
-                                    <script type=""module"">
-                                      import { Editor } from 'https://esm.sh/@tiptap/core'
-                                      import StarterKit from 'https://esm.sh/@tiptap/starter-kit'
-                                      const editor = new Editor({
-                                        element: document.querySelector('.element'),
-                                        extensions: [StarterKit],
-                                        content: '<p>Hello World!</p>',
-                                      })
-                                    </script>
-                                  </body>
-                                </html>";
+        webView.Url= new Uri("http://localhost:5173/");
     }
 };

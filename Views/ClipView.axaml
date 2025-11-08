@@ -12,6 +12,8 @@
 		<vm:Clip/>
 	</Design.DataContext>
 
-	<WebView x:Name="webView" Height="400" Width="400"/>
+	<Grid ColumnDefinitions="*" RowDefinitions="*, Auto">
+		<WebView x:Name="webView" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
+	</Grid>
 
 </Window>

@@ -83,4 +83,13 @@
   <ItemGroup>
     <Folder Include="Views\Converters\" />
   </ItemGroup>
+
+  <ItemGroup>
+    <AvaloniaResource Update="Assets\ClipView\index.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </AvaloniaResource>
+    <AvaloniaResource Update="Assets\ClipView\main.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </AvaloniaResource>
+  </ItemGroup>
 </Project>
