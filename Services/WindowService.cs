@@ -32,6 +32,7 @@ namespace ClipBoard.Services
 
                 window.DataContext = vm;
                 window.Show();
+                window.Activate();
             }
             catch (Exception ex)
             {

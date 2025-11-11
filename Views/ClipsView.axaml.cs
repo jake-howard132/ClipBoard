@@ -17,7 +17,6 @@ public partial class ClipsView : ReactiveWindow<ClipsViewModel>
     {
         this.WhenActivated(disposables =>
         {
-            AvaloniaXamlLoader.Load(this);
             InitializeComponent();
 
             if (this.ViewModel is not ClipsViewModel vm) return;

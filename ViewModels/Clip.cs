@@ -2,19 +2,21 @@
 using AvRichTextBox;
 using ClipBoard.Models;
 using ClipBoard.Services;
+using ClipBoard.Views;
 using DocumentFormat.OpenXml.Bibliography;
 using ReactiveUI;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reactive;
+using System.Threading.Tasks;
+
 
 namespace ClipBoard.ViewModels
 {
     public class Clip : ReactiveObject
     {
         private readonly ClipsRepository _clipsRepository;
-
-        public Uri EditorURI { get; }
 
         public int Id { get; set; }
         public int ClipGroupId { get; set; }
@@ -27,12 +29,11 @@ namespace ClipBoard.ViewModels
         public string? PasteHotKey { get; set; }
         public int SortOrder { get; set; }
 
-
         public Clip(ClipsRepository clipsRepository, int id, int clipGroupId, string clipGroupName, string name, string? description, object value, string mimeType, string copyHotKey, string pasteHotKey, int sortOrder)
         {
             try
             {
-                this.EditorURI = new Uri("avares://ClipBoard/Assets/Tiptap.html");
+                //this.EditorURI = new Uri("avares://ClipBoard/Assets/Tiptap.html");
             }
             catch (Exception ex)
             {

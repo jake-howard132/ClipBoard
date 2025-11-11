@@ -6,12 +6,21 @@ using AvaloniaWebView;
 using ClipBoard.Services;
 using ClipBoard.ViewModels;
 using ClipBoard.Views;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 using ReactiveUI;
+using ScriptingBridge;
 using Splat;
 using Splat.Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Threading.Tasks;
+
+
 
 namespace ClipBoard
 {
@@ -19,6 +28,8 @@ namespace ClipBoard
     {
         public static IServiceProvider Services { get; private set; } = null!;
         private Window? _ClipsView;
+        private WebApplication? _app;
+        private Task? _serverTask;
 
         public App(IServiceProvider services)
         {
@@ -32,6 +43,35 @@ namespace ClipBoard
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             {
                 desktop.ShutdownMode = ShutdownMode.OnExplicitShutdown;
+
+                var folder = Path.Combine(AppContext.BaseDirectory, "Assets", "clipview", "out");
+
+                var options = new WebApplicationOptions 
+                {
+                    WebRootPath = folder,
+                };
+
+                var builder = WebApplication.CreateBuilder(options);
+                builder
+                    .WebHost
+                    .UseUrls("http://localhost:2380");
+
+                _app = builder.Build();
+
+                _app.UseDefaultFiles(new DefaultFilesOptions
+                    {
+                        DefaultFileNames = new List<string> { "clipview.html" }
+                    })
+                    .UseStaticFiles(new StaticFileOptions
+                    {
+                        FileProvider = new PhysicalFileProvider(folder),
+                        RequestPath = ""
+                    });
+
+                _serverTask = Task.Run(async () =>
+                {
+                    await _app.StartAsync(); // Starts server without blocking
+                });
 
                 _ClipsView = new ClipsView
                 {
@@ -59,7 +99,7 @@ namespace ClipBoard
                 _ClipsView.Activate();
                 _ClipsView.Show();
             }
-            else _ClipsView.Hide();  
+            else _ClipsView.Hide();
         }
 
         private void View_Click(object? sender, System.EventArgs e)
