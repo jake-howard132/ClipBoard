@@ -20,13 +20,15 @@ namespace ClipBoard.Services
                 g.ToTable("ClipGroups");
                 g.HasKey(g => g.Id);
 
-                g.Property(cg => cg.Id)
-                    .ValueGeneratedOnAdd();
+                g
+                .Property(g => g.Id)
+                .ValueGeneratedOnAdd();
 
-                g.HasMany(g => g.Clips)
-                    .WithOne(c => c.ClipGroup)
-                    .HasForeignKey(c => c.ClipGroupId)
-                    .OnDelete(DeleteBehavior.Cascade); // When a group is deleted, delete its clips
+                g
+                .HasMany(g => g.Clips)
+                .WithOne(c => c.ClipGroup)
+                .HasForeignKey(c => c.ClipGroupId)
+                .OnDelete(DeleteBehavior.Cascade); // When a group is deleted, delete its clips
             });
 
             modelBuilder.Entity<ClipRecord>(c =>

@@ -1,7 +1,9 @@
-﻿using Avalonia.Media.Imaging;
+﻿using Avalonia.Collections;
+using Avalonia.Media.Imaging;
 using ClipBoard.Models;
 using ClipBoard.ViewModels;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -14,11 +16,12 @@ namespace ClipBoard.Services
 {
     public class ClipsRepository
     {
+        private readonly IServiceProvider _services;
         private readonly Db _db;
-        public ClipsRepository(Db db)
+        public ClipsRepository(IServiceProvider services)
         {
-            _db = db;
-            _db.Database.EnsureCreated();
+            _services = services;
+            _db = _services.GetRequiredService<Db>();
         }
 
         public async Task<ClipGroupRecord?> GetGroupByIdAsync(int clipGroupId)
@@ -43,17 +46,24 @@ namespace ClipBoard.Services
                 .ToListAsync();
         }
 
-        public async Task<ClipRecord> AddClipAsync(ClipRecord clip)
+        public async Task<Clip> AddClipAsync(Clip clip)
         {
-            await _db.Clips.AddAsync(clip);
-            await _db.SaveChangesAsync();
+            try
+            {
+                await _db.Clips.AddAsync(clip.ToRecord());
+                await _db.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
 
             return clip;
         }
 
-        public async Task AddClipsAsync(IList<ClipRecord> clips)
+        public async Task AddClipsAsync(IAvaloniaList<Clip> clips)
         {
-            await _db.Clips.AddRangeAsync(clips);
+            await _db.Clips.AddRangeAsync(clips.Select(c => c.ToRecord()));
             await _db.SaveChangesAsync();
         }
 
@@ -67,7 +77,7 @@ namespace ClipBoard.Services
             }
         }
 
-        public async Task UpdateClipOrdersAsync(int clipGroupId, IEnumerable<ClipRecord> clips)
+        public async Task UpdateClipOrdersAsync(int clipGroupId, IAvaloniaList<Clip> clips)
         {
             var clipIds = clips.Select(c => c.Id).ToList();
 

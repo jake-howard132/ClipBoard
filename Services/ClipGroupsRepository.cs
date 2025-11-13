@@ -1,6 +1,7 @@
 ﻿using ClipBoard.Models;
 using ClipBoard.ViewModels;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
@@ -12,27 +13,28 @@ namespace ClipBoard.Services
 {
     public class ClipGroupsRepository
     {
+        private readonly IServiceProvider _services;
         private readonly Db _db;
 
-        public ClipGroupsRepository(Db db)
+        public ClipGroupsRepository(IServiceProvider services)
         {
-            _db = db;
-            _db.Database.EnsureCreated();
+            _services = services;
+            _db = _services.GetRequiredService<Db>();
         }
         public async Task<List<ClipGroupRecord>> GetAllGroupsAsync()
         {
             return await _db.ClipGroups
-            .Include(g => g.Clips)
-            .OrderBy(g => g.SortOrder)
-            .Select(g => new ClipGroupRecord
-            {
-                Id = g.Id,
-                Name = g.Name,
-                Description = g.Description,
-                Clips = g.Clips.OrderBy(c => c.SortOrder).ToList(),
-                SortOrder = g.SortOrder
-            })
-            .ToListAsync();
+                .Include(g => g.Clips)
+                .OrderBy(g => g.SortOrder)
+                .Select(g => new ClipGroupRecord
+                {
+                    Id = g.Id,
+                    Name = g.Name,
+                    Description = g.Description,
+                    Clips = g.Clips.OrderBy(c => c.SortOrder).ToList(),
+                    SortOrder = g.SortOrder
+                })
+                .ToListAsync();
         }
         public async Task<ClipGroupRecord> AddClipGroupAsync(ClipGroupRecord clipGroup)
         {
@@ -48,7 +50,6 @@ namespace ClipBoard.Services
         {
             try
             {
-                var test = await _db.ClipGroups.ToListAsync();
                 var existing = await _db.ClipGroups.FindAsync(clipGroup.Id);
                 if (existing == null) return;
 

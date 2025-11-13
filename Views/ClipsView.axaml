@@ -28,18 +28,18 @@
 				<DataTemplate>
 					<TextBlock Text="{Binding Name}" 
 							   TextWrapping="Wrap"
-							   b:ListViewBehaviors.OpenClip="{Binding OpenClipCommand}">
-						<TextBlock.ContextMenu>
+							   b:ListBoxBehaviors.OpenClip="{Binding OpenClipCommand}">
+						<ContextMenu>
 							<MenuItem Header="Edit Clip" Command="{Binding OpenClipCommand}"/>
 							<MenuItem Header="Delete Clip"/>
-						</TextBlock.ContextMenu>
+						</ContextMenu>
 					</TextBlock>
 				</DataTemplate>
 			</ListBox.ItemTemplate>
 
 			<ListBox.ContextMenu>
 				<ContextMenu>
-					<!--<MenuItem Header="New Clip" Command="{Binding OpenClipCommand}"/>-->
+					<MenuItem Header="New Clip" Command="{Binding AddClipCommand}"/>
 					<MenuItem Header="Import Clips"/>
 				</ContextMenu>
 			</ListBox.ContextMenu>

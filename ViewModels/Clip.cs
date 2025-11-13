@@ -20,8 +20,7 @@ namespace ClipBoard.ViewModels
         private readonly IServiceProvider _services;
 
         public int Id { get; set; }
-        public int ClipGroupId { get; set; }
-        public string ClipGroupName { get; set; } = "";
+        public ClipGroup ClipGroup { get; set; }
 
         private string _name = "";
         public string Name
@@ -50,12 +49,11 @@ namespace ClipBoard.ViewModels
 
         public ReactiveCommand<Unit, Unit> OpenClipCommand { get; }
 
-        public Clip(IServiceProvider services, int id, int clipGroupId, string clipGroupName, string name, string? description, string value, string mimeType, string copyHotKey, string pasteHotKey, int sortOrder)
+        public Clip(IServiceProvider services, int id, ClipGroup clipGroup, string name, string? description, string value, string mimeType, string copyHotKey, string pasteHotKey, int sortOrder)
         {
             _services = services;
             Id = id;
-            ClipGroupId = clipGroupId;
-            ClipGroupName = clipGroupName;
+            ClipGroup = clipGroup;
             Name = name;
             Description = description ?? "";
             Value = value;
@@ -73,12 +71,11 @@ namespace ClipBoard.ViewModels
             await windowService.OpenWindowAsync(this);
         }
 
-        public static Clip ToModel(IServiceProvider services, ClipRecord c) =>
+        public static Clip ToModel(IServiceProvider services, ClipGroupRecord g, ClipRecord c) =>
             new(
                 services,
                 c.Id,
-                c.ClipGroupId,
-                c.ClipGroup.Name,
+                ClipGroup.ToModel(services, g),
                 c.Name,
                 c.Description,
                 c.Value,
@@ -92,7 +89,7 @@ namespace ClipBoard.ViewModels
             new()
             {
                 Id = Id,
-                ClipGroupId = ClipGroupId,
+                ClipGroup = ClipGroup.ToRecord(),
                 Description = Description,
                 Value = Value,
                 CopyHotKey = CopyHotKey,

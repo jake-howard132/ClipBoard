@@ -83,7 +83,7 @@ namespace ClipBoard.ViewModels
                 g.Description ?? "",
                 g.Clips
                     .OrderBy(c => c.SortOrder)
-                    .Select(c => Clip.ToModel(services, c))
+                    .Select(c => Clip.ToModel(services, g, c))
                     .ToList(),
                 g.SortOrder
             );

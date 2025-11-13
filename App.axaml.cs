@@ -43,7 +43,6 @@ namespace ClipBoard
         }
 
         public override void Initialize() => AvaloniaXamlLoader.Load(this);
-        private Window GetVM() => this._ClipsView;
 
         public interface SaveRequest
         {

@@ -20,7 +20,7 @@ namespace ClipBoard.Models
     {
         [Required][DatabaseGenerated(DatabaseGeneratedOption.Identity)] public int Id { get; init; }
         [Required] public int ClipGroupId { get; init; }
-        [Required] public ClipGroupRecord ClipGroup { get; set; } = null!;
+        [Required] public ClipGroupRecord? ClipGroup { get; init; }
         [Required] public string Name { get; init; } = "";
         public string? Description { get; init; }
         [Required] public string Value { get; init; } = "";

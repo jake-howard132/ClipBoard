@@ -13,7 +13,6 @@ namespace ClipBoard.Views.Behaviors
         public static readonly AttachedProperty<ICommand?> BeginEditProperty = AvaloniaProperty.RegisterAttached<Control, ICommand?>("BeginEdit", typeof(TextBoxBehaviors));
         public static readonly AttachedProperty<ICommand?> ConfirmEditProperty = AvaloniaProperty.RegisterAttached<Control, ICommand?>("ConfirmEdit", typeof(TextBoxBehaviors));
         public static readonly AttachedProperty<ICommand?> CancelEditProperty = AvaloniaProperty.RegisterAttached<Control, ICommand?>("CancelEdit", typeof(TextBoxBehaviors));
-
         public static readonly AttachedProperty<bool> IsFocusedProperty = AvaloniaProperty.RegisterAttached<Control, bool>("IsFocused", typeof(TextBoxBehaviors));
 
         static TextBoxBehaviors()
