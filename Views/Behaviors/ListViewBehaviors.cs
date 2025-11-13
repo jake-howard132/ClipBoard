@@ -24,8 +24,8 @@ namespace ClipBoard.Views.Behaviors
 
             var command = GetOpenClip(control);
 
-            if (command?.CanExecute(command) == true)
-                command.Execute(command);
+            if (command?.CanExecute(null) == true)
+                command.Execute(null);
 
             e.Handled = true;
         }

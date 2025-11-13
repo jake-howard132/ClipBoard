@@ -14,7 +14,7 @@
   </ItemGroup>
   
  <ItemGroup>
-    <None Include="Assets\clipview\out\**" CopyToOutputDirectory="Always" />
+    <None Include="Assets\clipview\dist\**" CopyToOutputDirectory="Always" />
   </ItemGroup>
 
   <ItemGroup>

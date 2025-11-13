@@ -4,6 +4,7 @@ using ClipBoard.Models;
 using ClipBoard.Services;
 using ClipBoard.Views;
 using DocumentFormat.OpenXml.Bibliography;
+using Microsoft.Extensions.DependencyInjection;
 using ReactiveUI;
 using System;
 using System.Collections.Generic;
@@ -16,52 +17,71 @@ namespace ClipBoard.ViewModels
 {
     public class Clip : ReactiveObject
     {
-        private readonly ClipsRepository _clipsRepository;
+        private readonly IServiceProvider _services;
 
         public int Id { get; set; }
         public int ClipGroupId { get; set; }
         public string ClipGroupName { get; set; } = "";
-        public string Name { get; set; } = "";
-        public string? Description { get; set; }
-        public virtual object Value { get; set; }
+
+        private string _name = "";
+        public string Name
+        {
+            get => _name;
+            set => this.RaiseAndSetIfChanged(ref _name, value);
+        }
+
+        private string _description = "";
+        public string Description
+        {
+            get => _description ?? "";
+            set => this.RaiseAndSetIfChanged(ref _description, value);
+        }
+
+        private string _value = "";
+        public string Value
+        {
+            get => _value;
+            set => this.RaiseAndSetIfChanged(ref _value, value);
+        }
         public string MimeType { get; set; } = "";
         public string? CopyHotKey { get; set; }
         public string? PasteHotKey { get; set; }
         public int SortOrder { get; set; }
 
-        public Clip(ClipsRepository clipsRepository, int id, int clipGroupId, string clipGroupName, string name, string? description, object value, string mimeType, string copyHotKey, string pasteHotKey, int sortOrder)
-        {
-            try
-            {
-                //this.EditorURI = new Uri("avares://ClipBoard/Assets/Tiptap.html");
-            }
-            catch (Exception ex)
-            {
-                var test = ex;
-            }
+        public ReactiveCommand<Unit, Unit> OpenClipCommand { get; }
 
-            _clipsRepository = clipsRepository;
+        public Clip(IServiceProvider services, int id, int clipGroupId, string clipGroupName, string name, string? description, string value, string mimeType, string copyHotKey, string pasteHotKey, int sortOrder)
+        {
+            _services = services;
             Id = id;
             ClipGroupId = clipGroupId;
             ClipGroupName = clipGroupName;
             Name = name;
-            Description = description;
+            Description = description ?? "";
             Value = value;
             MimeType = mimeType;
             CopyHotKey = copyHotKey;
             PasteHotKey = pasteHotKey;
             SortOrder = sortOrder;
+
+            OpenClipCommand = ReactiveCommand.CreateFromTask(OpenClipAsync);
+        }
+        private async Task OpenClipAsync()
+        {
+            var windowService = _services.GetRequiredService<WindowService>();
+
+            await windowService.OpenWindowAsync(this);
         }
 
-        public static Clip ToModel(ClipsRepository clipsRepository, ClipRecord c) =>
+        public static Clip ToModel(IServiceProvider services, ClipRecord c) =>
             new(
-                clipsRepository,
+                services,
                 c.Id,
                 c.ClipGroupId,
                 c.ClipGroup.Name,
                 c.Name,
                 c.Description,
-                DecodeValue(c.MimeType, c.Value),
+                c.Value,
                 c.MimeType,
                 c.CopyHotKey ?? "",
                 c.PasteHotKey ?? "",
@@ -74,7 +94,7 @@ namespace ClipBoard.ViewModels
                 Id = Id,
                 ClipGroupId = ClipGroupId,
                 Description = Description,
-                Value = EncodeValue(MimeType, Value),
+                Value = Value,
                 CopyHotKey = CopyHotKey,
                 PasteHotKey = PasteHotKey,
                 MimeType = MimeType,

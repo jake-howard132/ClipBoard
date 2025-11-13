@@ -1,5 +1,6 @@
 ﻿using Avalonia.Media.Imaging;
 using ClipBoard.Models;
+using ClipBoard.ViewModels;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -42,11 +43,20 @@ namespace ClipBoard.Services
                 .ToListAsync();
         }
 
+        public async Task<ClipRecord> AddClipAsync(ClipRecord clip)
+        {
+            await _db.Clips.AddAsync(clip);
+            await _db.SaveChangesAsync();
+
+            return clip;
+        }
+
         public async Task AddClipsAsync(IList<ClipRecord> clips)
         {
             await _db.Clips.AddRangeAsync(clips);
             await _db.SaveChangesAsync();
         }
+
         public async Task DeleteClipAsync(int clipId)
         {
             var clip = await _db.Clips.FindAsync(clipId);
@@ -56,6 +66,7 @@ namespace ClipBoard.Services
                 await _db.SaveChangesAsync();
             }
         }
+
         public async Task UpdateClipOrdersAsync(int clipGroupId, IEnumerable<ClipRecord> clips)
         {
             var clipIds = clips.Select(c => c.Id).ToList();

@@ -23,7 +23,7 @@ namespace ClipBoard.Models
         [Required] public ClipGroupRecord ClipGroup { get; set; } = null!;
         [Required] public string Name { get; init; } = "";
         public string? Description { get; init; }
-        [Required] public byte[] Value { get; init; } = Array.Empty<byte>();
+        [Required] public string Value { get; init; } = "";
         [Required] public string MimeType { get; set; } = string.Empty;
         public string? CopyHotKey { get; init; }
         public string? PasteHotKey { get; init; }

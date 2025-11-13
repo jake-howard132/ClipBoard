@@ -43,17 +43,7 @@ public partial class ClipView : ReactiveWindow<Clip>
                 }
             };
 
-            webView.WebMessageReceived += (sender, e) =>
-            {
-                var tetst = e.Message;
-            };
-
-            //var stream = AssetLoader.Open(uri);
-            //using var reader = new StreamReader(stream);
-            //var html = reader.ReadToEnd();
             webView.Url = uri;
-
-            //webView.Url = new Uri("http://localhost:2380/clipview");
         });
 
     }

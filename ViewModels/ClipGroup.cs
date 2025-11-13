@@ -1,6 +1,7 @@
 ﻿using Avalonia.Collections;
 using ClipBoard.Models;
 using ClipBoard.Services;
+using Microsoft.Extensions.DependencyInjection;
 using ReactiveUI;
 using System;
 using System.Collections.Generic;
@@ -13,8 +14,7 @@ namespace ClipBoard.ViewModels
 {
     public class ClipGroup : ReactiveObject
     {
-        private readonly ClipGroupsRepository _clipGroupsRepository;
-        private readonly ClipsRepository _clipsRepository;
+        private readonly IServiceProvider _services;
 
         public int Id { get; set; }
 
@@ -42,10 +42,9 @@ namespace ClipBoard.ViewModels
             set => this.RaiseAndSetIfChanged(ref _isEditing, value);
         }
 
-        public ClipGroup(ClipGroupsRepository clipGroupsRepository, ClipsRepository clipsRepository, int id, string name, string description, IEnumerable<Clip> clips, int sortOrder, bool isEditing = false)
+        public ClipGroup(IServiceProvider services, int id, string name, string description, IEnumerable<Clip> clips, int sortOrder, bool isEditing = false)
         {
-            _clipGroupsRepository = clipGroupsRepository;
-            _clipsRepository = clipsRepository;
+            _services = services;
             this.Id = id;
             this._name = name;
             this._description = description;
@@ -53,34 +52,38 @@ namespace ClipBoard.ViewModels
             this.Clips = new AvaloniaList<Clip>(clips);
             this.SortOrder = sortOrder;
         }
+
         public ClipGroup BeginEdit()
         {
             this.OriginalName = _name;
             this.IsEditing = true;
             return this;
         }
+
         public async Task<ClipGroup> ConfirmEdit()
         {
-            await _clipGroupsRepository.UpdateGroupAsync(this.ToRecord());
+            var clipGroupsRepository = _services.GetRequiredService<ClipGroupsRepository>();
+            await clipGroupsRepository.UpdateGroupAsync(this.ToRecord());
             this.IsEditing = false;
             return this;
         }
+
         public ClipGroup CancelEdit()
         {
             this.Name = OriginalName;
             this.IsEditing = false;
             return this;
         }
-        public static ClipGroup ToModel(ClipGroupsRepository clipGroupsRepository, ClipsRepository clipsRepository, ClipGroupRecord g) =>
+
+        public static ClipGroup ToModel(IServiceProvider services, ClipGroupRecord g) =>
             new(
-                clipGroupsRepository,
-                clipsRepository,
+                services,
                 g.Id,
                 g.Name,
                 g.Description ?? "",
                 g.Clips
                     .OrderBy(c => c.SortOrder)
-                    .Select(c => Clip.ToModel(clipsRepository, c))
+                    .Select(c => Clip.ToModel(services, c))
                     .ToList(),
                 g.SortOrder
             );
