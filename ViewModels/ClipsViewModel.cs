@@ -102,10 +102,11 @@ namespace ClipBoard.ViewModels
 
             var groups = await clipGroupsRepository.GetAllGroupsAsync();
 
-            foreach (var group in groups)
-                ClipGroups.Add(ClipGroup.ToModel(this._services, group));
+            if (groups == null) return;
 
-            SelectedClipGroup ??= ClipGroups.FirstOrDefault();
+            ClipGroups.AddRange<ClipGroup>(groups);
+
+            SelectedClipGroup = ClipGroups.FirstOrDefault();
         }
         private async Task AddClipAsync()
         {
@@ -115,8 +116,8 @@ namespace ClipBoard.ViewModels
 
             var newClip = new Clip(
                 _services,
-                default,
-                _selectedClipGroup,
+                null,
+                _selectedClipGroup.Id,
                 "New Clip",
                 "",
                 "",
@@ -138,7 +139,7 @@ namespace ClipBoard.ViewModels
         private async Task AddClipsByGroupAsync(IAvaloniaList<Clip> newClips)
         {
             var clipsRepository = _services.GetRequiredService<ClipsRepository>();
-            var groupedClips = newClips.GroupBy(c => c.ClipGroup.Id);
+            var groupedClips = newClips.GroupBy(c => c.ClipGroupId);
 
             foreach (var group in groupedClips)
             {
@@ -154,7 +155,7 @@ namespace ClipBoard.ViewModels
 
             var clipGroup = new ClipGroup(
                 _services,
-                default,
+                null,
                 "New ClipGroup",
                 "",
                 new AvaloniaList<Clip>(),
@@ -183,11 +184,11 @@ namespace ClipBoard.ViewModels
         {
             var clipsRepository = _services.GetRequiredService<ClipsRepository>();
 
-            var clipGroup = ClipGroups.FirstOrDefault(g => g.Id == clip.ClipGroup.Id);
+            var clipGroup = ClipGroups.FirstOrDefault(g => g.Id == clip.ClipGroupId);
 
-            if (clipGroup == null) return;
+            if (clipGroup == null || clip.Id is null) return;
 
-            await clipsRepository.DeleteClipAsync(clip.Id);
+            await clipsRepository.DeleteClipAsync((int)clip.Id);
             clipGroup.Clips.Remove(clip);
             await ResequenceClipsAsync(clipGroup);
         }
@@ -199,7 +200,7 @@ namespace ClipBoard.ViewModels
             {
                 clipGroup.Clips[i].SortOrder = i;
             }
-            await clipsRepository.UpdateClipOrdersAsync(clipGroup.Id, clipGroup.Clips);
+            await clipsRepository.UpdateClipOrdersAsync((int)clipGroup.Id!, clipGroup.Clips);
         }
     }
 }

@@ -29,20 +29,22 @@ namespace ClipBoard.Services
                 .WithOne(c => c.ClipGroup)
                 .HasForeignKey(c => c.ClipGroupId)
                 .OnDelete(DeleteBehavior.Cascade); // When a group is deleted, delete its clips
+
+                g.Property(g => g.SortOrder)
+                .IsRequired();
             });
 
             modelBuilder.Entity<ClipRecord>(c =>
             {
                 c.ToTable("Clips");
-                c.HasKey(c => c.Id);
                 c.HasIndex(c => new { c.ClipGroupId, c.SortOrder });
 
-                c.Property(c => c.Value)
-                    .IsRequired()
-                    .HasColumnName("Value");
+                c
+                .Property(c => c.Id)
+                .ValueGeneratedOnAdd();
 
                 c.Property(c => c.SortOrder)
-                    .IsRequired();
+                .IsRequired();
             });
         }
     }

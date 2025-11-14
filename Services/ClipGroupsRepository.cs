@@ -21,20 +21,13 @@ namespace ClipBoard.Services
             _services = services;
             _db = _services.GetRequiredService<Db>();
         }
-        public async Task<List<ClipGroupRecord>> GetAllGroupsAsync()
+        public async Task<IEnumerable<ClipGroup>?> GetAllGroupsAsync()
         {
             return await _db.ClipGroups
-                .Include(g => g.Clips)
-                .OrderBy(g => g.SortOrder)
-                .Select(g => new ClipGroupRecord
-                {
-                    Id = g.Id,
-                    Name = g.Name,
-                    Description = g.Description,
-                    Clips = g.Clips.OrderBy(c => c.SortOrder).ToList(),
-                    SortOrder = g.SortOrder
-                })
-                .ToListAsync();
+            .Include(g => g.Clips)
+            .OrderBy(g => g.SortOrder)
+            .Select(g => ClipGroup.ToModel(_services, g))
+            .ToListAsync();
         }
         public async Task<ClipGroupRecord> AddClipGroupAsync(ClipGroupRecord clipGroup)
         {

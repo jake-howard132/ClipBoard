@@ -9,37 +9,65 @@
 		mc:Ignorable="d"
 		x:Class="ClipBoard.Views.ClipsView"
 		x:DataType="vm:ClipsViewModel"
-		Title="ClipBoard" 
-		Closing="Window_Closing" 
-		ShowInTaskbar="True" 
-		CanMinimize="False" 
+		Title="ClipBoard"
+		Closing="Window_Closing"
+		ShowInTaskbar="True"
+		CanMinimize="False"
 		SizeToContent="Manual">
 
 	<Design.DataContext>
 		<vm:ClipsViewModel/>
 	</Design.DataContext>
 
-	<Grid ColumnDefinitions="*" RowDefinitions="*, Auto">
+	<Grid ColumnDefinitions="*"
+		  RowDefinitions="*, Auto">
 		<ListBox ItemsSource="{Binding SelectedClipGroup.Clips}"
 				 VerticalAlignment="Stretch"
 				 Background="Transparent"
 				 Grid.Row="0">
+
+			<ListBox.Styles>
+				<Style Selector="ListBoxItem">
+					<Setter Property="Padding"
+							Value="0"/>
+				</Style>
+			</ListBox.Styles>
+
 			<ListBox.ItemTemplate>
 				<DataTemplate>
-					<TextBlock Text="{Binding Name}" 
-							   TextWrapping="Wrap"
-							   b:ListBoxBehaviors.OpenClip="{Binding OpenClipCommand}">
-						<ContextMenu>
-							<MenuItem Header="Edit Clip" Command="{Binding OpenClipCommand}"/>
-							<MenuItem Header="Delete Clip"/>
-						</ContextMenu>
-					</TextBlock>
+					<Grid ColumnDefinitions="Auto, *"
+						  RowDefinitions="*"
+						  Height="40"
+						  DoubleTapped="Item_DoubleTapped">
+						<Border BorderThickness="2"
+								BorderBrush="White" 									   
+								Grid.Row="0"
+								Grid.Column="0">
+							<Border.ContextMenu>
+								<ContextMenu>
+									<MenuItem Header="Edit Clip"
+											  Command="{Binding OpenClipCommand}"/>
+									<MenuItem Header="Delete Clip"/>
+								</ContextMenu>
+							</Border.ContextMenu>
+							<TextBlock Text="{Binding Name}"
+									   TextWrapping="Wrap"
+									   Margin="0,0,10,0">
+							</TextBlock>
+						</Border>
+						<TextBlock Text="{Binding Value}"
+								   TextWrapping="Wrap"
+								   Grid.Row="0"
+								   Grid.Column="1">
+						</TextBlock>
+					</Grid>
 				</DataTemplate>
 			</ListBox.ItemTemplate>
 
 			<ListBox.ContextMenu>
 				<ContextMenu>
-					<MenuItem Header="New Clip" Command="{Binding AddClipCommand}"/>
+					<MenuItem Header="New Clip"
+							  Command="{Binding AddClipCommand}"/>
 					<MenuItem Header="Import Clips"/>
 				</ContextMenu>
 			</ListBox.ContextMenu>
@@ -56,7 +84,8 @@
 
 			<TabControl.ItemsPanel>
 				<ItemsPanelTemplate>
-					<StackPanel Orientation="Horizontal" Margin="0,0,0,20"/>
+					<StackPanel Orientation="Horizontal"
+								Margin="0,0,0,20"/>
 				</ItemsPanelTemplate>
 			</TabControl.ItemsPanel>
 
@@ -79,7 +108,8 @@
 								   b:TextBoxBehaviors.BeginEdit="{Binding BeginEdit}">
 							<TextBlock.ContextMenu>
 								<ContextMenu>
-									<MenuItem Header="Rename" Command="{Binding BeginEdit}"/>
+									<MenuItem Header="Rename"
+											  Command="{Binding BeginEdit}"/>
 									<MenuItem Header="Delete"
 											  Command="{Binding $parent[Window].((vm:ClipsViewModel)DataContext).DeleteClipGroupCommand}"
 											  CommandParameter="{Binding}"/>
@@ -95,9 +125,12 @@
 			<TabControl.Template>
 				<ControlTemplate>
 					<DockPanel>
-						<ScrollViewer DockPanel.Dock="Bottom" HorizontalAlignment="Stretch" HorizontalScrollBarVisibility="Auto">
+						<ScrollViewer DockPanel.Dock="Bottom"
+									  HorizontalAlignment="Stretch"
+									  HorizontalScrollBarVisibility="Auto">
 							<StackPanel Orientation="Horizontal">
-								<ItemsPresenter Name="PART_ItemsPresenter" ItemsPanel="{TemplateBinding ItemsPanel}" />
+								<ItemsPresenter Name="PART_ItemsPresenter"
+												ItemsPanel="{TemplateBinding ItemsPanel}" />
 								<Button Content="+"
 										FontSize="20"
 										Padding="10,0"

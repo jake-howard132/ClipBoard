@@ -2,6 +2,7 @@
 using Avalonia.Controls;
 using Avalonia.Input;
 using System.Windows.Input;
+using System.Windows.Input;
 
 namespace ClipBoard.Views.Behaviors
 {
@@ -13,20 +14,19 @@ namespace ClipBoard.Views.Behaviors
         {
             OpenClipProperty.Changed.AddClassHandler<Control>((control, e) =>
             {
-                control.DoubleTapped -= OpenClip;
-                if (e.NewValue is ICommand)
-                    control.DoubleTapped += OpenClip;
+                //control.DoubleTapped -= OpenClip;
+                //control.DoubleTapped += OpenClip;
             });
         }
 
         private static void OpenClip(object? sender, TappedEventArgs e)
         {
-            if (sender is not ListBox lb) return;
+            if (sender is not Control control) return;
 
-            var command = GetOpenClip(lb);
+            var command = GetOpenClip(control);
 
-            if (command?.CanExecute(e) == true)
-                command.Execute(e);
+            if (command?.CanExecute(null) == true)
+                command.Execute(null);
         }
 
         public static void SetOpenClip(AvaloniaObject element, ICommand? value) => element.SetValue(OpenClipProperty, value);

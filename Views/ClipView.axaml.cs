@@ -27,31 +27,33 @@ public partial class ClipView : ReactiveWindow<Clip>
 {
     public ClipView()
     {
+        var uri = new Uri("http://localhost:2380");
+
         this.WhenActivated(disposables =>
         {
             InitializeComponent();
 
-            var uri = new Uri("http://localhost:2380");
-
             webView.NavigationCompleted += (s, e) =>
             {
                 if (this.ViewModel is not Clip vm) return;
-                if (vm.Value is string strValue)
-                {
-                    var escaped = System.Text.Json.JsonSerializer.Serialize(strValue);
-                    webView.PostWebMessageAsJson("{ type: 'SetEditorContent', payload:" + "'<p>Nothing here</p>'" + "}", uri);
-                }
+
+                //var escaped = System.Text.Json.JsonSerializer.Serialize(strValue);
+
+                LoadWebviewContent(vm.Value);
             };
 
             webView.Url = uri;
         });
+    }
 
+    private void LoadWebviewContent(string content)
+    {
+        webView.PostWebMessageAsJson("{ type: 'SetEditorContent', payload: " + content ?? "<p>Nothing to see here!</p>" + " }", new Uri("http://localhost:2380"));
     }
 
     private void Window_Closing(object? sender, WindowClosingEventArgs e)
     {
         this.Hide();
-        webView.Reload();
         e.Cancel = true;
     }
 };

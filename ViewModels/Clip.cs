@@ -19,8 +19,8 @@ namespace ClipBoard.ViewModels
     {
         private readonly IServiceProvider _services;
 
-        public int Id { get; set; }
-        public ClipGroup ClipGroup { get; set; }
+        public int? Id { get; set; }
+        public int? ClipGroupId { get; set; }
 
         private string _name = "";
         public string Name
@@ -49,11 +49,11 @@ namespace ClipBoard.ViewModels
 
         public ReactiveCommand<Unit, Unit> OpenClipCommand { get; }
 
-        public Clip(IServiceProvider services, int id, ClipGroup clipGroup, string name, string? description, string value, string mimeType, string copyHotKey, string pasteHotKey, int sortOrder)
+        public Clip(IServiceProvider services, int? id, int? clipGroupId, string name, string? description, string value, string mimeType, string copyHotKey, string pasteHotKey, int sortOrder)
         {
             _services = services;
             Id = id;
-            ClipGroup = clipGroup;
+            ClipGroupId = clipGroupId;
             Name = name;
             Description = description ?? "";
             Value = value;
@@ -75,7 +75,7 @@ namespace ClipBoard.ViewModels
             new(
                 services,
                 c.Id,
-                ClipGroup.ToModel(services, g),
+                g.Id,
                 c.Name,
                 c.Description,
                 c.Value,
@@ -89,7 +89,6 @@ namespace ClipBoard.ViewModels
             new()
             {
                 Id = Id,
-                ClipGroup = ClipGroup.ToRecord(),
                 Description = Description,
                 Value = Value,
                 CopyHotKey = CopyHotKey,

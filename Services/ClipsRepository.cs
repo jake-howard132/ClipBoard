@@ -38,7 +38,7 @@ namespace ClipBoard.Services
                 }).FirstOrDefaultAsync();
         }
 
-        public async Task<List<ClipRecord>> GetClipsByGroupAsync(int clipGroupId)
+        public async Task<IEnumerable<ClipRecord>> GetClipsByGroupAsync(int clipGroupId)
         {
             return await _db.Clips
                 .Where(c => c.ClipGroupId == clipGroupId)

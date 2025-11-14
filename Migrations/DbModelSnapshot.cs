@@ -27,7 +27,6 @@ namespace ClipBoard.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(200)
                         .HasColumnType("TEXT");
 
                     b.Property<int>("SortOrder")
@@ -67,10 +66,9 @@ namespace ClipBoard.Migrations
                     b.Property<int>("SortOrder")
                         .HasColumnType("INTEGER");
 
-                    b.Property<byte[]>("Value")
+                    b.Property<string>("Value")
                         .IsRequired()
-                        .HasColumnType("BLOB")
-                        .HasColumnName("Value");
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 

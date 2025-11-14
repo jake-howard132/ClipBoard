@@ -40,6 +40,8 @@ namespace ClipBoard
         public App(IServiceProvider services)
         {
             Services = services;
+
+            Services.GetRequiredService<Db>().Database.Migrate();
         }
 
         public override void Initialize() => AvaloniaXamlLoader.Load(this);
@@ -62,7 +64,7 @@ namespace ClipBoard
                     Width = 600
                 };
 
-                var app = CreateServer();
+                var app = CreateWebServer();
 
                 _serverTask = Task.Run(async () =>
                 {
@@ -92,7 +94,7 @@ namespace ClipBoard
             else _ClipsView.Hide();
         }
 
-        private WebApplication CreateServer()
+        private WebApplication CreateWebServer()
         {
             var folder = Path.Combine(AppContext.BaseDirectory, "Assets", "clipview", "dist");
 
@@ -123,7 +125,7 @@ namespace ClipBoard
                 .AddControllers();
 
             //_app?.MapControllers();
-
+            
             var app = builder.Build();
 
             app
@@ -146,10 +148,13 @@ namespace ClipBoard
                     {
                         var vm = Services.GetRequiredService<ClipsViewModel>();
 
-                        vm.OpenClip.Value = message;
+                        if (vm.SelectedClipGroup is null || vm.OpenClip is null) return;
+
+                        
                         var clip = vm.SelectedClipGroup.Clips.FirstOrDefault((c) => c.Id == vm.OpenClip.Id);
-                        if (clip != null) clip = vm.OpenClip;
-                        else vm.SelectedClipGroup.Clips.Add(vm.OpenClip);
+
+                        if (clip is null) return;
+                        clip.Value = message;
                     });
 
                     return Results.Ok($"Data received: {message}");

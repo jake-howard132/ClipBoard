@@ -1,6 +1,7 @@
 ﻿using Avalonia.Collections;
 using ClipBoard.Models;
 using ClipBoard.Services;
+using DocumentFormat.OpenXml.Office2016.Drawing.ChartDrawing;
 using Microsoft.Extensions.DependencyInjection;
 using ReactiveUI;
 using System;
@@ -16,7 +17,7 @@ namespace ClipBoard.ViewModels
     {
         private readonly IServiceProvider _services;
 
-        public int Id { get; set; }
+        public int? Id { get; set; }
 
         private string _name;
         public string Name
@@ -32,7 +33,13 @@ namespace ClipBoard.ViewModels
             get => _description;
             set => this.RaiseAndSetIfChanged(ref _description, value);
         }
-        public virtual IAvaloniaList<Clip> Clips { get; set; } = new AvaloniaList<Clip>();
+
+        private IAvaloniaList<Clip> _clips;
+        public IAvaloniaList<Clip> Clips
+        {
+            get => _clips;
+            set => this.RaiseAndSetIfChanged(ref _clips, value);
+        }
         public int SortOrder { get; set; }
 
         private bool _isEditing;
@@ -42,7 +49,7 @@ namespace ClipBoard.ViewModels
             set => this.RaiseAndSetIfChanged(ref _isEditing, value);
         }
 
-        public ClipGroup(IServiceProvider services, int id, string name, string description, IEnumerable<Clip> clips, int sortOrder, bool isEditing = false)
+        public ClipGroup(IServiceProvider services, int? id, string name, string description, IEnumerable<Clip> clips, int sortOrder, bool isEditing = false)
         {
             _services = services;
             this.Id = id;
@@ -62,8 +69,9 @@ namespace ClipBoard.ViewModels
 
         public async Task<ClipGroup> ConfirmEdit()
         {
-            var clipGroupsRepository = _services.GetRequiredService<ClipGroupsRepository>();
-            await clipGroupsRepository.UpdateGroupAsync(this.ToRecord());
+            await _services
+                .GetRequiredService<ClipGroupsRepository>()
+                .UpdateGroupAsync(this.ToRecord());
             this.IsEditing = false;
             return this;
         }
@@ -75,18 +83,19 @@ namespace ClipBoard.ViewModels
             return this;
         }
 
-        public static ClipGroup ToModel(IServiceProvider services, ClipGroupRecord g) =>
-            new(
+        public static ClipGroup ToModel(IServiceProvider services, ClipGroupRecord g)
+        {
+            return new ClipGroup(
                 services,
                 g.Id,
                 g.Name,
                 g.Description ?? "",
                 g.Clips
-                    .OrderBy(c => c.SortOrder)
                     .Select(c => Clip.ToModel(services, g, c))
-                    .ToList(),
+                    .OrderBy(c => c.SortOrder),
                 g.SortOrder
             );
+        }
 
         public ClipGroupRecord ToRecord() =>
             new()
@@ -95,8 +104,8 @@ namespace ClipBoard.ViewModels
                 Name = this.Name,
                 Description = this.Description,
                 Clips = this.Clips
-                    .Select(c => c.ToRecord())
-                    .ToList(),
+                    .OrderBy(c => c.SortOrder)
+                    .Select(c => c.ToRecord()),
                 SortOrder = this.SortOrder
             };
     }

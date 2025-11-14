@@ -1,13 +1,11 @@
-﻿using Avalonia;
-using Avalonia.Controls;
-using Avalonia.Markup.Xaml;
-using Avalonia.Threading;
-using Avalonia.VisualTree;
+﻿using Avalonia.Controls;
+using Avalonia.Interactivity;
 using ClipBoard.ViewModels;
 using MsBox.Avalonia;
 using MsBox.Avalonia.Enums;
 using ReactiveUI;
 using ReactiveUI.Avalonia;
+using System;
 
 namespace ClipBoard.Views;
 
@@ -30,6 +28,12 @@ public partial class ClipsView : ReactiveWindow<ClipsViewModel>
 
             vm.LoadClipGroupsCommand.Execute();
         });
+    }
+    private void Item_DoubleTapped(object sender, RoutedEventArgs e)
+    {
+        if (sender is not Control control || control.DataContext is not ClipBoard.ViewModels.Clip clip) return;
+
+        clip.OpenClipCommand.Execute();
     }
 
     private void Window_Closing(object? sender, WindowClosingEventArgs e)
