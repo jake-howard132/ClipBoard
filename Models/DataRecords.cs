@@ -25,6 +25,7 @@ namespace ClipBoard.Models
         [Required] public string Name { get; set; } = "";
         public string? Description { get; set; }
         [Required] public string Value { get; set; } = "";
+        [Required] public string JsonValue { get; set; } = "";
         [Required] public string MimeType { get; set; } = string.Empty;
         public string? CopyHotKey { get; set; }
         public string? PasteHotKey { get; set; }

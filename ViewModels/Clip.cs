@@ -42,6 +42,13 @@ namespace ClipBoard.ViewModels
             get => _value;
             set => this.RaiseAndSetIfChanged(ref _value, value);
         }
+
+        private string _jsonValue = "";
+        public string JsonValue
+        {
+            get => _jsonValue;
+            set => this.RaiseAndSetIfChanged(ref _jsonValue, value);
+        }
         public string MimeType { get; set; } = "";
         public string? CopyHotKey { get; set; }
         public string? PasteHotKey { get; set; }

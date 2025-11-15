@@ -73,7 +73,7 @@ import { handleImageUpload, MAX_FILE_SIZE } from '@/lib/tiptap-utils';
 // --- Styles ---
 import '@/components/tiptap-templates/simple/simple-editor.scss';
 
-import content from '@/components/tiptap-templates/simple/data/content.json';
+// import content from '@/components/tiptap-templates/simple/data/content.json';
 
 const MainToolbarContent = ({
 	onHighlighterClick,
@@ -209,8 +209,7 @@ export function SimpleEditor() {
 	const toolbarRef = useRef<HTMLDivElement>(null);
 
 	const editor = useEditor({
-		immediatelyRender: false,
-		shouldRerenderOnTransaction: false,
+		// immediatelyRender: false,
 		editorProps: {
 			attributes: {
 				autocomplete: 'off',
@@ -219,6 +218,13 @@ export function SimpleEditor() {
 				'aria-label': 'Main content area, start typing to enter text.',
 				class: 'simple-editor',
 			},
+		},
+		onCreate() {
+			if (window.chrome?.webview) {
+				window.chrome.webview.addEventListener('message', (e) => {
+					editor.commands.setContent(e.content);
+				});
+			}
 		},
 		extensions: [
 			StarterKit.configure({
@@ -246,7 +252,6 @@ export function SimpleEditor() {
 				onError: (error) => console.error('Upload failed:', error),
 			}),
 		],
-		content,
 	});
 
 	const rect = useCursorVisibility({
@@ -278,21 +283,18 @@ export function SimpleEditor() {
 							onHighlighterClick={() => setMobileView('highlighter')}
 							onLinkClick={() => setMobileView('link')}
 							onSaveClick={() => {
-								let message = editor?.getHTML();
+								let message = {
+									json: editor.getJSON(),
+									text: editor.getText(),
+								};
 
-								fetch('http://localhost:2380/saveclip', {
-									method: 'POST',
-									headers: { 'Content-Type': 'application/json' },
-									body: JSON.stringify({ value: message }),
-								})
-									.then((res) => {
-										editor?.commands.setContent(
-											'Request complete! response: ' + JSON.stringify(res)
-										);
-									})
-									.catch((ex) => {
-										editor?.commands.setContent(ex);
-									});
+								window.chrome?.webview?.postMessage(JSON.stringify(message));
+
+								// fetch('http://localhost:2380/saveclip', {
+								// 	method: 'POST',
+								// 	headers: { 'Content-Type': 'application/json' },
+								// 	body: JSON.stringify({ value: message }),
+								// });
 							}}
 							isMobile={isMobile}
 						/>

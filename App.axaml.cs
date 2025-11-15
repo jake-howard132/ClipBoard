@@ -138,28 +138,28 @@ namespace ClipBoard
                 .UseRouting()
                 .UseCors("any-origin");
 
-            app.MapPost("/saveclip", async (HttpRequest req) =>
-            {
-                using (StreamReader reader = new StreamReader(req.Body, Encoding.UTF8))
-                {
-                    var message = await reader.ReadToEndAsync();
+            //app.MapPost("/saveclip", async (HttpRequest req) =>
+            //{
+            //    using (StreamReader reader = new StreamReader(req.Body, Encoding.UTF8))
+            //    {
+            //        var message = await reader.ReadToEndAsync();
 
-                    Dispatcher.UIThread.Post(() =>
-                    {
-                        var vm = Services.GetRequiredService<ClipsViewModel>();
+            //        Dispatcher.UIThread.Post(() =>
+            //        {
+            //            var vm = Services.GetRequiredService<ClipsViewModel>();
 
-                        if (vm.SelectedClipGroup is null || vm.OpenClip is null) return;
+            //            if (vm.SelectedClipGroup is null || vm.OpenClip is null) return;
 
                         
-                        var clip = vm.SelectedClipGroup.Clips.FirstOrDefault((c) => c.Id == vm.OpenClip.Id);
+            //            var clip = vm.SelectedClipGroup.Clips.FirstOrDefault((c) => c.Id == vm.OpenClip.Id);
 
-                        if (clip is null) return;
-                        clip.Value = message;
-                    });
+            //            if (clip is null) return;
+            //            clip.Value = message;
+            //        });
 
-                    return Results.Ok($"Data received: {message}");
-                }
-            });
+            //        return Results.Ok($"Data received: {message}");
+            //    }
+            //});
 
             return app;
         }

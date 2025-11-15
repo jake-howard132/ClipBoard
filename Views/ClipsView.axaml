@@ -38,6 +38,7 @@
 					<Grid ColumnDefinitions="Auto, *"
 						  RowDefinitions="*"
 						  Height="40"
+						  HorizontalAlignment="Stretch"
 						  DoubleTapped="Item_DoubleTapped">
 						<Border BorderThickness="2"
 								BorderBrush="White" 									   
@@ -55,11 +56,14 @@
 									   Margin="0,0,10,0">
 							</TextBlock>
 						</Border>
-						<TextBlock Text="{Binding Value}"
-								   TextWrapping="Wrap"
-								   Grid.Row="0"
-								   Grid.Column="1">
-						</TextBlock>
+						<Border BorderThickness="2"
+								BorderBrush="Red"
+								Grid.Row="0"
+								Grid.Column="1">
+							<TextBlock Text="{Binding Value}"
+									   TextWrapping="Wrap">
+							</TextBlock>
+						</Border>
 					</Grid>
 				</DataTemplate>
 			</ListBox.ItemTemplate>
