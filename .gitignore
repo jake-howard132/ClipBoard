@@ -23,9 +23,9 @@ bld/
 [Ll]og/
 [Ll]ogs/
 *.db
-.github/workflows/build.yml
 FileContentIndex/
 DesignTimeBuild
+Migrations/
 
 # .NET Core
 project.lock.json

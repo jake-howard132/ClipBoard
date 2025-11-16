@@ -1,0 +1,65 @@
+name: Build Desptop Apps
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+
+jobs:
+  build:
+    name: Build for ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        include:
+          - os: windows-latest
+            rid: win-x64
+          - os: ubuntu-latest
+            rid: linux-x64
+          - os: macos-latest
+            rid: osx-x64
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    # Install Node for building the Vite project
+    - name: Install Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: 18
+
+    - name: Install NPM dependencies
+      working-directory: Assets/clipview
+      run: npm install
+
+    - name: Build Vite project
+      working-directory: Assets/clipview
+      run: npm run build
+
+    - name: Install .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: 8.0.x
+
+      # Restore packages
+    - name: Restore
+      run: dotnet restore
+
+    # Publish per-OS
+    - name: Publish ClipBoard App
+      run: |
+        dotnet publish -c Release \
+          -r ${{ matrix.rid }} \
+          --self-contained true \
+          /p:PublishTrimmed=false
+
+    # Upload artifacts
+    - name: Upload installer / publish directory
+    # Supports .zip, .msix, .dmg, .deb if generated
+      uses: actions/upload-artifact@v4
+      with:
+        name: "ClipBoard-${{ matrix.rid }}"
+        path: |
+          ClipBoard/bin/Release/net8.0/${{ matrix.rid }}/publish/
