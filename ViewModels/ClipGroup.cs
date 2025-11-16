@@ -19,13 +19,14 @@ namespace ClipBoard.ViewModels
 
         public int? Id { get; set; }
 
+        private string _originalName { get; set; } = "";
+
         private string _name;
         public string Name
         {
             get => _name;
             set => this.RaiseAndSetIfChanged(ref _name, value);
         }
-        private string OriginalName { get; set; } = "";
 
         private string _description;
         public string Description
@@ -62,7 +63,7 @@ namespace ClipBoard.ViewModels
 
         public ClipGroup BeginEdit()
         {
-            this.OriginalName = _name;
+            this._originalName = _name;
             this.IsEditing = true;
             return this;
         }
@@ -78,7 +79,7 @@ namespace ClipBoard.ViewModels
 
         public ClipGroup CancelEdit()
         {
-            this.Name = OriginalName;
+            this.Name = _originalName;
             this.IsEditing = false;
             return this;
         }

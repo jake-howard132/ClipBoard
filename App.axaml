@@ -14,8 +14,7 @@
 
 	<TrayIcon.Icons>
 		<TrayIcons>
-			<TrayIcon Icon="/Assets/avalonia-logo.ico"
-					  ToolTipText="ClipBoard" Clicked="View_Click">
+			<TrayIcon ToolTipText="ClipBoard" Clicked="View_Click">
 				<TrayIcon.Menu>
 					<NativeMenu>
 						<NativeMenuItem Header="View Clips"  Click="View_Click"/>

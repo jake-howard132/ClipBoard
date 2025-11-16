@@ -19,8 +19,8 @@ namespace ClipBoard.Views.Behaviors
         {
             BeginEditProperty.Changed.AddClassHandler<Control>((control, e) =>
             {
-                control.DoubleTapped -= BeginEdit;
-                control.DoubleTapped += BeginEdit;
+                control.DoubleTapped -= BeginRename;
+                control.DoubleTapped += BeginRename;
             });
 
             IsFocusedProperty.Changed.AddClassHandler<Control>((control, e) =>
@@ -64,13 +64,11 @@ namespace ClipBoard.Views.Behaviors
             });
         }
 
-        private static void BeginEdit(object? sender, TappedEventArgs e)
+        private static void BeginRename(object? sender, TappedEventArgs e)
         {
             if (sender is not Control control) return;
 
             Edit(control);
-
-            e.Handled = true;
         }
         private static void OnAttached(object? sender, VisualTreeAttachmentEventArgs e)
         {
@@ -99,15 +97,11 @@ namespace ClipBoard.Views.Behaviors
             if (focused == null) return;
 
             Confirm(focused);
-
-            e.Handled = true;
         }
         private static void OnLostFocus(object? sender, RoutedEventArgs e)
         {
             if (sender is not TextBox tb) return;
             Confirm(tb);
-
-            e.Handled = true;
         }
 
         private static void OnKeyDown(object? sender, KeyEventArgs e)
@@ -122,8 +116,6 @@ namespace ClipBoard.Views.Behaviors
             {
                 Cancel(textBox);
             }
-
-            e.Handled = true;
         }
         private static void Edit(Control tb)
         {

@@ -40,30 +40,40 @@
 						  Height="40"
 						  HorizontalAlignment="Stretch"
 						  DoubleTapped="Item_DoubleTapped">
-						<Border BorderThickness="2"
-								BorderBrush="White" 									   
-								Grid.Row="0"
-								Grid.Column="0">
-							<Border.ContextMenu>
-								<ContextMenu>
-									<MenuItem Header="Edit Clip"
-											  Command="{Binding OpenClipCommand}"/>
-									<MenuItem Header="Delete Clip"/>
-								</ContextMenu>
-							</Border.ContextMenu>
+
+						<Grid.ContextMenu>
+							<ContextMenu>
+								<MenuItem Header="Edit Clip"
+										  Command="{Binding OpenClipCommand}"/>
+								<MenuItem Header="Rename"/>
+								<MenuItem Header="Delete Clip"/>
+							</ContextMenu>
+						</Grid.ContextMenu>
+
+						<Grid Grid.Row="0"
+							  Grid.Column="0">
+							<TextBox Text="{Binding Name, Mode=TwoWay}"
+									 IsVisible="{Binding IsEditing, Mode=TwoWay}"
+									 Focusable="True"
+									 b:TextBoxBehaviors.ConfirmEdit="{Binding ConfirmEdit}"
+									 b:TextBoxBehaviors.CancelEdit="{Binding CancelEdit}"
+									 b:TextBoxBehaviors.IsFocused="{Binding IsEditing}"/>
+
 							<TextBlock Text="{Binding Name}"
 									   TextWrapping="Wrap"
-									   Margin="0,0,10,0">
+									   Margin="0,0,10,0"
+									   IsVisible="{Binding !IsEditing, Mode=TwoWay }"
+									   Focusable="True"
+									   b:TextBoxBehaviors.BeginEdit="{Binding BeginEdit}">
 							</TextBlock>
-						</Border>
-						<Border BorderThickness="2"
-								BorderBrush="Red"
-								Grid.Row="0"
-								Grid.Column="1">
-							<TextBlock Text="{Binding Value}"
-									   TextWrapping="Wrap">
-							</TextBlock>
-						</Border>
+						</Grid>
+
+						<TextBlock Text="{Binding Value}"
+								   TextWrapping="Wrap"
+								   Grid.Row="0"
+								   Grid.Column="1">
+						</TextBlock>
+						
 					</Grid>
 				</DataTemplate>
 			</ListBox.ItemTemplate>

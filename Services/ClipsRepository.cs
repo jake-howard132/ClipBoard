@@ -76,6 +76,19 @@ namespace ClipBoard.Services
                 await _db.SaveChangesAsync();
             }
         }
+        public async Task UpdateClipAsync(ClipRecord clip)
+        {
+            var existing = await _db.Clips.FindAsync(clip.Id);
+            if (existing == null) return;
+
+            existing = clip;
+
+            _db.Clips.Attach(existing);
+            _db.Entry(existing).Property(x => x.Id).IsModified = false; // EF ignores Id
+            _db.Entry(existing).State = EntityState.Modified;
+
+            await _db.SaveChangesAsync();
+        }
 
         public async Task UpdateClipOrdersAsync(int clipGroupId, IAvaloniaList<Clip> clips)
         {

@@ -26,6 +26,7 @@ bld/
 FileContentIndex/
 DesignTimeBuild
 Migrations/
+.vs/
 
 # .NET Core
 project.lock.json

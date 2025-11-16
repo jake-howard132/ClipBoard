@@ -52,6 +52,10 @@ namespace ClipBoard.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("JsonValue")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("MimeType")
                         .IsRequired()
                         .HasColumnType("TEXT");

@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reactive;
 using System.Threading.Tasks;
+using System.Windows.Input;
 
 
 namespace ClipBoard.ViewModels
@@ -21,6 +22,7 @@ namespace ClipBoard.ViewModels
 
         public int? Id { get; set; }
         public int? ClipGroupId { get; set; }
+        private string _originalName { get; set; } = "";
 
         private string _name = "";
         public string Name
@@ -49,11 +51,19 @@ namespace ClipBoard.ViewModels
             get => _jsonValue;
             set => this.RaiseAndSetIfChanged(ref _jsonValue, value);
         }
+
+        private bool _isEditing;
+        public bool IsEditing
+        {
+            get => _isEditing;
+            set => this.RaiseAndSetIfChanged(ref _isEditing, value);
+        }
         public string MimeType { get; set; } = "";
         public string? CopyHotKey { get; set; }
         public string? PasteHotKey { get; set; }
         public int SortOrder { get; set; }
 
+        public ICommand StartRenameCommand { get; }
         public ReactiveCommand<Unit, Unit> OpenClipCommand { get; }
 
         public Clip(IServiceProvider services, int? id, int? clipGroupId, string name, string? description, string value, string mimeType, string copyHotKey, string pasteHotKey, int sortOrder)
@@ -70,6 +80,29 @@ namespace ClipBoard.ViewModels
             SortOrder = sortOrder;
 
             OpenClipCommand = ReactiveCommand.CreateFromTask(OpenClipAsync);
+            StartRenameCommand = ReactiveCommand.Create(() => { IsEditing = true; });
+        }
+        public Clip BeginEdit()
+        {
+            this._originalName = _name;
+            this.IsEditing = true;
+            return this;
+        }
+
+        public async Task<Clip> ConfirmEdit()
+        {
+            await _services
+                .GetRequiredService<ClipsRepository>()
+                .UpdateClipAsync(this.ToRecord());
+            this.IsEditing = false;
+            return this;
+        }
+
+        public Clip CancelEdit()
+        {
+            this.Name = _originalName;
+            this.IsEditing = false;
+            return this;
         }
         private async Task OpenClipAsync()
         {

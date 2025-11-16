@@ -7,12 +7,13 @@ namespace ClipBoard.Services
 {
     public class Db : DbContext
     {
+        public Db(DbContextOptions<Db> options) : base(options)
+        {
+        }
+
         public DbSet<ClipGroupRecord> ClipGroups => Set<ClipGroupRecord>();
         public DbSet<ClipRecord> Clips => Set<ClipRecord>();
 
-        public Db(DbContextOptions<Db> options): base(options)
-        {
-        }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<ClipGroupRecord>(g =>

@@ -41,26 +41,16 @@ namespace ClipBoard.Services
         }
         public async Task UpdateGroupAsync(ClipGroupRecord clipGroup)
         {
-            try
-            {
-                var existing = await _db.ClipGroups.FindAsync(clipGroup.Id);
-                if (existing == null) return;
+            var existing = await _db.ClipGroups.FindAsync(clipGroup.Id);
+            if (existing == null) return;
 
-                existing.Name = clipGroup.Name;
-                existing.Description = clipGroup.Description;
-                existing.SortOrder = clipGroup.SortOrder;
+            existing = clipGroup;
 
-                _db.ClipGroups.Attach(existing);
-                _db.Entry(existing).Property(x => x.Id).IsModified = false; // EF ignores Id
-                _db.Entry(existing).State = EntityState.Modified;
+            _db.ClipGroups.Attach(existing);
+            _db.Entry(existing).Property(x => x.Id).IsModified = false; // EF ignores Id
+            _db.Entry(existing).State = EntityState.Modified;
 
-                await _db.SaveChangesAsync();
-            }
-            catch (Exception ex)
-            {
-                var test = ex;
-            }
-
+            await _db.SaveChangesAsync();
         }
     }
 }

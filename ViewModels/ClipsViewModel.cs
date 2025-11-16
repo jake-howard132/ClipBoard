@@ -179,6 +179,7 @@ namespace ClipBoard.ViewModels
             await clipGroupsRepository.DeleteClipGroupAsync(clipGroup.ToRecord());
             ClipGroups.Remove(clipGroup);
             await ResequenceClipsAsync(clipGroup);
+            SelectedClipGroup = ClipGroups.FirstOrDefault();
         }
         private async Task DeleteClipAsync(Clip clip)
         {
