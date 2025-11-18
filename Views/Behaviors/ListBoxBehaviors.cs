@@ -2,7 +2,6 @@
 using Avalonia.Controls;
 using Avalonia.Input;
 using System.Windows.Input;
-using System.Windows.Input;
 
 namespace ClipBoard.Views.Behaviors
 {

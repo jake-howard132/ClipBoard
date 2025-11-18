@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
+using Microsoft.Net.Http.Headers;
 using ReactiveUI;
 using ScriptingBridge;
 using Splat;
@@ -57,7 +58,7 @@ namespace ClipBoard
             {
                 desktop.ShutdownMode = ShutdownMode.OnExplicitShutdown;
 
-                _ClipsView = new ClipsView
+                _ClipsView = new MainView
                 {
                     DataContext = Services.GetRequiredService<ClipsViewModel>(),
                     Height = 1000,
@@ -133,7 +134,13 @@ namespace ClipBoard
                 .UseStaticFiles(new StaticFileOptions
                 {
                     FileProvider = new PhysicalFileProvider(folder),
-                    RequestPath = ""
+                    RequestPath = "",
+                    OnPrepareResponse = ctx =>
+                    {
+                        ctx.Context.Response.Headers["Cache-Control"] = "no-store, no-cache, must-revalidate, max-age=0";
+                        ctx.Context.Response.Headers["Pragma"] = "no-cache";
+                        ctx.Context.Response.Headers["Expires"] = "0";
+                    }
                 })
                 .UseRouting()
                 .UseCors("any-origin");

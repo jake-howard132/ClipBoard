@@ -1,5 +1,7 @@
 'use client';
 
+import { getFirstMessage, subscribeToMessage } from '@/messageBuffer';
+
 import { useEffect, useRef, useState } from 'react';
 import { EditorContent, EditorContext, useEditor } from '@tiptap/react';
 
@@ -219,13 +221,12 @@ export function SimpleEditor() {
 				class: 'simple-editor',
 			},
 		},
-		onCreate() {
-			if (window.chrome?.webview) {
-				window.chrome.webview.addEventListener('message', (e) => {
-					editor.commands.setContent(e.content);
-				});
-			}
-		},
+		// onCreate() {
+		// 	const firstMessage = getFirstMessage();
+		// 	if (firstMessage) editor.commands.setContent(firstMessage);
+
+		// 	subscribeToMessage((value) => editor.commands.setContent(value));
+		// },
 		extensions: [
 			StarterKit.configure({
 				horizontalRule: false,
@@ -253,6 +254,15 @@ export function SimpleEditor() {
 			}),
 		],
 	});
+
+	useEffect(() => {
+		const firstMessage = getFirstMessage();
+		if (firstMessage) editor.commands.setContent(JSON.parse(firstMessage));
+
+		subscribeToMessage((message) =>
+			editor.commands.setContent(JSON.parse(message))
+		);
+	}, [editor]);
 
 	const rect = useCursorVisibility({
 		editor,

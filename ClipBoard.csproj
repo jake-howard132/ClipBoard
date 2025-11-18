@@ -60,11 +60,11 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
-    <Compile Update="Views\ClipsView.axaml.cs">
+    <Compile Update="Views\MainView.axaml.cs">
       <DependentUpon>ClipsView.axaml</DependentUpon>
     </Compile>
-    <Compile Update="Views\ClipsView.axaml.cs">
-      <DependentUpon>ClipsView.axaml</DependentUpon>
+    <Compile Update="Views\MainView.axaml.cs">
+      <DependentUpon>MainView.axaml</DependentUpon>
     </Compile>
     <Compile Update="Views\ClipView.axaml.cs">
       <DependentUpon>ClipView.axaml</DependentUpon>

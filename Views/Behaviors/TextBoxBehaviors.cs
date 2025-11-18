@@ -10,17 +10,38 @@ namespace ClipBoard.Views.Behaviors
 {
     public static class TextBoxBehaviors
     {
-        public static readonly AttachedProperty<ICommand?> BeginEditProperty = AvaloniaProperty.RegisterAttached<Control, ICommand?>("BeginEdit", typeof(TextBoxBehaviors));
-        public static readonly AttachedProperty<ICommand?> ConfirmEditProperty = AvaloniaProperty.RegisterAttached<Control, ICommand?>("ConfirmEdit", typeof(TextBoxBehaviors));
-        public static readonly AttachedProperty<ICommand?> CancelEditProperty = AvaloniaProperty.RegisterAttached<Control, ICommand?>("CancelEdit", typeof(TextBoxBehaviors));
+        public static readonly AttachedProperty<ICommand?> BeginRenameProperty = AvaloniaProperty.RegisterAttached<Control, ICommand?>("BeginRename", typeof(TextBoxBehaviors));
+        public static readonly AttachedProperty<ICommand?> ConfirmRenameProperty = AvaloniaProperty.RegisterAttached<Control, ICommand?>("ConfirmRename", typeof(TextBoxBehaviors));
+        public static readonly AttachedProperty<ICommand?> CancelRenameProperty = AvaloniaProperty.RegisterAttached<Control, ICommand?>("CancelRename", typeof(TextBoxBehaviors));
         public static readonly AttachedProperty<bool> IsFocusedProperty = AvaloniaProperty.RegisterAttached<Control, bool>("IsFocused", typeof(TextBoxBehaviors));
 
         static TextBoxBehaviors()
         {
-            BeginEditProperty.Changed.AddClassHandler<Control>((control, e) =>
+            BeginRenameProperty.Changed.AddClassHandler<Control>((control, e) =>
             {
-                control.DoubleTapped -= BeginRename;
-                control.DoubleTapped += BeginRename;
+                control.DoubleTapped -= OnBeginRename;
+                control.DoubleTapped += OnBeginRename;
+            });
+
+            ConfirmRenameProperty.Changed.AddClassHandler<Control>((control, e) =>
+            {
+                control.AttachedToVisualTree -= OnAttached;
+                control.AttachedToVisualTree += OnAttached;
+
+                control.DetachedFromVisualTree -= OnDetached;
+                control.DetachedFromVisualTree += OnDetached;
+
+                control.KeyDown -= OnKeyDown;
+                control.KeyDown += OnKeyDown;
+
+                control.LostFocus -= OnLostFocus;
+                control.LostFocus += OnLostFocus;
+            });
+
+            CancelRenameProperty.Changed.AddClassHandler<Control>((control, e) =>
+            {
+                control.KeyDown -= OnKeyDown;
+                control.KeyDown += OnKeyDown;
             });
 
             IsFocusedProperty.Changed.AddClassHandler<Control>((control, e) =>
@@ -38,37 +59,13 @@ namespace ClipBoard.Views.Behaviors
                     }, DispatcherPriority.Background);
                 }
             });
-
-            ConfirmEditProperty.Changed.AddClassHandler<Control>((control, e) =>
-            {
-                control.AttachedToVisualTree -= OnAttached;
-                control.AttachedToVisualTree += OnAttached;
-
-                control.DetachedFromVisualTree -= OnDetached;
-                control.DetachedFromVisualTree += OnDetached;
-            });
-
-            ConfirmEditProperty.Changed.AddClassHandler<Control>((control, e) =>
-            {
-                control.KeyDown -= OnKeyDown;
-                control.KeyDown += OnKeyDown;
-
-                control.LostFocus -= OnLostFocus;
-                control.LostFocus += OnLostFocus;
-            });
-
-            CancelEditProperty.Changed.AddClassHandler<Control>((control, e) =>
-            {
-                control.KeyDown -= OnKeyDown;
-                control.KeyDown += OnKeyDown;
-            });
         }
 
-        private static void BeginRename(object? sender, TappedEventArgs e)
+        private static void OnBeginRename(object? sender, TappedEventArgs e)
         {
             if (sender is not Control control) return;
 
-            Edit(control);
+            BeginRename(control);
         }
         private static void OnAttached(object? sender, VisualTreeAttachmentEventArgs e)
         {
@@ -96,12 +93,12 @@ namespace ClipBoard.Views.Behaviors
             var focused = window.FocusManager?.GetFocusedElement() as TextBox;
             if (focused == null) return;
 
-            Confirm(focused);
+            ConfirmRename(focused);
         }
         private static void OnLostFocus(object? sender, RoutedEventArgs e)
         {
             if (sender is not TextBox tb) return;
-            Confirm(tb);
+            ConfirmRename(tb);
         }
 
         private static void OnKeyDown(object? sender, KeyEventArgs e)
@@ -110,45 +107,45 @@ namespace ClipBoard.Views.Behaviors
 
             if (e.Key == Key.Enter)
             {
-                Confirm(textBox);
+                textBox.LostFocus -= OnLostFocus;
+                ConfirmRename(textBox);
             }
             else if (e.Key == Key.Escape)
             {
-                Cancel(textBox);
+                CancelRename(textBox);
             }
         }
-        private static void Edit(Control tb)
+        private static void BeginRename(Control tb)
         {
-            var command = GetBeginEdit(tb);
+            var command = GetBeginRename(tb);
 
             if (command?.CanExecute(command) == true)
                 command.Execute(command);
         }
-        private static void Confirm(TextBox tb)
+        private static void ConfirmRename(TextBox tb)
         {
-            var command = GetConfirmEdit(tb);
+            var command = GetConfirmRename(tb);
 
             if (command?.CanExecute(command) == true)
                 command.Execute(command);
         }
-
-        private static void Cancel(TextBox tb)
+        private static void CancelRename(TextBox tb)
         {
-            var command = GetCancelEdit(tb);
+            var command = GetCancelRename(tb);
             if (command?.CanExecute(command) == true)
                 command.Execute(command);
         }
 
-        public static void SetBeginEdit(AvaloniaObject element, ICommand? value) => element.SetValue(BeginEditProperty, value);
-        public static ICommand? GetBeginEdit(AvaloniaObject element) => element.GetValue(BeginEditProperty);
+        public static void SetBeginRename(AvaloniaObject element, ICommand? value) => element.SetValue(BeginRenameProperty, value);
+        public static ICommand? GetBeginRename(AvaloniaObject element) => element.GetValue(BeginRenameProperty);
+
+        public static void SetConfirmRename(AvaloniaObject element, ICommand? value) => element.SetValue(ConfirmRenameProperty, value);
+        public static ICommand? GetConfirmRename(AvaloniaObject element) => element.GetValue(ConfirmRenameProperty);
+
+        public static void SetCancelRename(AvaloniaObject element, ICommand? value) => element.SetValue(CancelRenameProperty, value);
+        public static ICommand? GetCancelRename(AvaloniaObject element) => element.GetValue(CancelRenameProperty);
 
         public static void SetIsFocused(AvaloniaObject element, bool value) => element.SetValue(IsFocusedProperty, value);
         public static bool GetIsFocused(AvaloniaObject element) => element.GetValue(IsFocusedProperty);
-
-        public static void SetConfirmEdit(AvaloniaObject element, ICommand? value) => element.SetValue(ConfirmEditProperty, value);
-        public static ICommand? GetConfirmEdit(AvaloniaObject element) => element.GetValue(ConfirmEditProperty);
-
-        public static void SetCancelEdit(AvaloniaObject element, ICommand? value) => element.SetValue(CancelEditProperty, value);
-        public static ICommand? GetCancelEdit(AvaloniaObject element) => element.GetValue(CancelEditProperty);
     }
 }

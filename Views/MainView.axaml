@@ -1,0 +1,164 @@
+<Window xmlns="https://github.com/avaloniaui"
+		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+		xmlns:vm="using:ClipBoard.ViewModels"
+		xmlns:local="using:ClipBoard.Views.ClipsView"
+		xmlns:b="using:ClipBoard.Views.Behaviors"
+		xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+		xmlns:emit="using:System.Reflection.Emit"
+		xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+		mc:Ignorable="d"
+		x:Class="ClipBoard.Views.MainView"
+		x:DataType="vm:ClipsViewModel"
+		Title="ClipBoard"
+		Closing="Window_Closing"
+		ShowInTaskbar="True"
+		CanMinimize="False"
+		SizeToContent="Manual">
+
+	<Design.DataContext>
+		<vm:ClipsViewModel/>
+	</Design.DataContext>
+
+	<Grid ColumnDefinitions="*"
+		  RowDefinitions="*, Auto">
+		<ListBox ItemsSource="{Binding SelectedClipGroup.Clips}"
+				 VerticalAlignment="Stretch"
+				 Background="Transparent"
+				 Grid.Row="0">
+
+			<ListBox.Styles>
+				<Style Selector="ListBoxItem">
+					<Setter Property="Padding"
+							Value="0"/>
+				</Style>
+			</ListBox.Styles>
+
+			<ListBox.ItemTemplate>
+				<DataTemplate>
+					<Grid ColumnDefinitions="Auto, *"
+						  RowDefinitions="*"
+						  Height="40"
+						  Background="Transparent"
+						  HorizontalAlignment="Stretch"
+						  DoubleTapped="Item_DoubleTapped">
+
+						<Grid.ContextMenu>
+							<ContextMenu>
+								<MenuItem Header="Edit Clip"
+										  Command="{Binding OpenClipCommand}"/>
+								<MenuItem Header="Rename"
+										  Command="{Binding BeginRename}"/>
+								<MenuItem Header="Delete Clip"
+										  Command="{Binding $parent[Window].((vm:ClipsViewModel)DataContext).DeleteClipCommand}"
+										  CommandParameter="{Binding}"/>
+							</ContextMenu>
+						</Grid.ContextMenu>
+
+						<Grid Grid.Row="0"
+							  Grid.Column="0">
+							<TextBox Text="{Binding Name, Mode=TwoWay}"
+									 IsVisible="{Binding IsEditing, Mode=TwoWay}"
+									 Focusable="True"
+									 b:TextBoxBehaviors.ConfirmRename="{Binding ConfirmRename}"
+									 b:TextBoxBehaviors.CancelRename="{Binding CancelRename}"
+									 b:TextBoxBehaviors.IsFocused="{Binding IsEditing}"/>
+
+							<TextBlock Text="{Binding Name}"
+									   TextWrapping="Wrap"
+									   Margin="0,0,10,0"
+									   IsVisible="{Binding !IsEditing, Mode=TwoWay }"
+									   Focusable="True">
+							</TextBlock>
+						</Grid>
+
+						<TextBlock Text="{Binding Value}"
+								   TextWrapping="Wrap"
+								   Grid.Row="0"
+								   Grid.Column="1">
+						</TextBlock>
+						
+					</Grid>
+				</DataTemplate>
+			</ListBox.ItemTemplate>
+
+			<ListBox.ContextMenu>
+				<ContextMenu>
+					<!--<MenuItem Header="New Clip"
+							  Command="{Binding AddClipCommand}"/>-->
+					<MenuItem Header="Import Clips"/>
+				</ContextMenu>
+			</ListBox.ContextMenu>
+		</ListBox>
+
+		<TabStrip Name="ClipGroupsTabs"
+				  Grid.Row="1"
+				  VerticalAlignment="Bottom"
+				  Margin="5"
+				  FontSize="16"
+				  ItemsSource="{Binding ClipGroups, Mode=TwoWay}"
+				  SelectedItem="{Binding SelectedClipGroup, Mode=TwoWay}">
+
+			<TabStrip.ItemsPanel>
+				<ItemsPanelTemplate>
+					<StackPanel Orientation="Horizontal"
+								Margin="0,0,0,20"/>
+				</ItemsPanelTemplate>
+			</TabStrip.ItemsPanel>
+
+			<TabStrip.ItemTemplate>
+				<DataTemplate>
+					<Grid>
+						<!-- Editing mode -->
+						<TextBox x:Name="EditTextBox"
+								 Text="{Binding Name, Mode=TwoWay}"
+								 IsVisible="{Binding IsEditing, Mode=TwoWay}"
+								 Focusable="True"
+								 b:TextBoxBehaviors.ConfirmRename="{Binding ConfirmRename}"
+								 b:TextBoxBehaviors.CancelRename="{Binding CancelRename}"
+								 b:TextBoxBehaviors.IsFocused="{Binding IsEditing}"/>
+
+						<!-- Display mode -->
+						<TextBlock Text="{Binding Name}"
+								   IsVisible="{Binding !IsEditing, Mode=TwoWay }"
+								   Focusable="True"
+								   b:TextBoxBehaviors.BeginRename="{Binding BeginRename}">
+							<TextBlock.ContextMenu>
+								<ContextMenu>
+									<MenuItem Header="Rename"
+											  Command="{Binding BeginRename}"/>
+									<MenuItem Header="Delete"
+											  Command="{Binding $parent[Window].((vm:ClipsViewModel)DataContext).DeleteClipGroupCommand}"
+											  CommandParameter="{Binding}"/>
+									<MenuItem Header="Add Clip"/>
+									<MenuItem Header="Import Clips"/>
+								</ContextMenu>
+							</TextBlock.ContextMenu>
+						</TextBlock>
+					</Grid>
+				</DataTemplate>
+			</TabStrip.ItemTemplate>
+
+			<TabStrip.Template>
+				<ControlTemplate>
+					<DockPanel>
+						<ScrollViewer DockPanel.Dock="Bottom"
+									  HorizontalAlignment="Stretch"
+									  HorizontalScrollBarVisibility="Auto">
+							<StackPanel Orientation="Horizontal">
+								<ItemsPresenter Name="PART_ItemsPresenter"
+												ItemsPanel="{TemplateBinding ItemsPanel}" />
+								<Button Content="+"
+										FontSize="20"
+										Padding="10,0"
+										Margin="0,0,0,20"
+										VerticalAlignment="Center"
+										Command="{Binding AddClipGroupCommand}"/>
+
+							</StackPanel>
+						</ScrollViewer>
+					</DockPanel>
+				</ControlTemplate>
+			</TabStrip.Template>
+		</TabStrip>
+	</Grid>
+</Window>

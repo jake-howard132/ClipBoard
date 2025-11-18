@@ -46,11 +46,11 @@ namespace ClipBoard.Services
                 .ToListAsync();
         }
 
-        public async Task<Clip> AddClipAsync(Clip clip)
+        public async Task<ClipRecord> AddClipAsync(ClipRecord clip)
         {
             try
             {
-                await _db.Clips.AddAsync(clip.ToRecord());
+                await _db.Clips.AddAsync(clip);
                 await _db.SaveChangesAsync();
             }
             catch (Exception ex)
@@ -78,14 +78,11 @@ namespace ClipBoard.Services
         }
         public async Task UpdateClipAsync(ClipRecord clip)
         {
-            var existing = await _db.Clips.FindAsync(clip.Id);
-            if (existing == null) return;
+            var tracked = await _db.Clips.FirstOrDefaultAsync(c => c.Id == clip.Id);
 
-            existing = clip;
+            if (tracked is null) return;
 
-            _db.Clips.Attach(existing);
-            _db.Entry(existing).Property(x => x.Id).IsModified = false; // EF ignores Id
-            _db.Entry(existing).State = EntityState.Modified;
+            _db.Entry(tracked).CurrentValues.SetValues(clip);
 
             await _db.SaveChangesAsync();
         }
