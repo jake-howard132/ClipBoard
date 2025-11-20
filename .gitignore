@@ -28,7 +28,6 @@ FileContentIndex/
 DesignTimeBuild
 Migrations/
 .vs/
-ClipView/
 
 # .NET Core
 project.lock.json
