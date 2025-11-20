@@ -50,8 +50,6 @@ namespace ClipBoard.ViewModels
             set => this.RaiseAndSetIfChanged(ref _isEditing, value);
         }
         public ReactiveCommand<Unit, Unit> AddClipCommand { get; }
-        public ReactiveCommand<Clip, Unit> DeleteClipCommand { get; }
-
 
         public ClipGroup(IServiceProvider services, int? id, string name, string description, IEnumerable<Clip> clips, int sortOrder, bool isEditing = false)
         {
@@ -64,7 +62,6 @@ namespace ClipBoard.ViewModels
             this.SortOrder = sortOrder;
 
             AddClipCommand = ReactiveCommand.CreateFromTask(AddClipAsync);
-            DeleteClipCommand = ReactiveCommand.CreateFromTask<Clip>(clip => DeleteClipAsync(clip));
         }
 
         public ClipGroup BeginRename()
@@ -113,14 +110,16 @@ namespace ClipBoard.ViewModels
             this.Clips.Add(newClip);
             newClip.OpenClipCommand.Execute();
         }
-        private async Task DeleteClipAsync(Clip clip)
+        public async Task<bool> DeleteClipAsync(Clip clip)
         {
-            var clipsRepository = _services.GetRequiredService<ClipsRepository>();
+            if (clip.Id is null) return false;
 
-            if (clip.Id is null) return;
+            await _services
+                .GetRequiredService<ClipsRepository>()
+                .DeleteClipAsync((int)clip.Id);
 
-            await clipsRepository.DeleteClipAsync((int)clip.Id);
             this.Clips.Remove(clip);
+            return true;
         }
 
         public static ClipGroup ToModel(IServiceProvider services, ClipGroupRecord g)

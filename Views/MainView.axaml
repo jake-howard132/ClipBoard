@@ -49,8 +49,7 @@
 								<MenuItem Header="Rename"
 										  Command="{Binding BeginRename}"/>
 								<MenuItem Header="Delete Clip"
-										  Command="{Binding $parent[Window].((vm:ClipsViewModel)DataContext).DeleteClipCommand}"
-										  CommandParameter="{Binding}"/>
+										  Command="{Binding DeleteClipCommand}"/>
 							</ContextMenu>
 						</Grid.ContextMenu>
 
@@ -129,7 +128,8 @@
 									<MenuItem Header="Delete"
 											  Command="{Binding $parent[Window].((vm:ClipsViewModel)DataContext).DeleteClipGroupCommand}"
 											  CommandParameter="{Binding}"/>
-									<MenuItem Header="Add Clip"/>
+									<MenuItem Header="Add Clip"
+											  Command="{Binding AddClipCommand}"/>
 									<MenuItem Header="Import Clips"/>
 								</ContextMenu>
 							</TextBlock.ContextMenu>

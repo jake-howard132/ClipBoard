@@ -66,6 +66,7 @@ namespace ClipBoard.ViewModels
         public ICommand BeginRenameCommand { get; }
         public ReactiveCommand<Unit, Unit> OpenClipCommand { get; }
         public ReactiveCommand<Unit, Unit> UpdateClipCommand { get; }
+        public ReactiveCommand<Unit, Unit> DeleteClipCommand { get; }
 
         public Clip(IServiceProvider services, int? id, int? clipGroupId, string name, string? description, string? value, string? jsonValue, string mimeType, string copyHotKey, string pasteHotKey, int sortOrder)
         {
@@ -83,6 +84,7 @@ namespace ClipBoard.ViewModels
 
             OpenClipCommand = ReactiveCommand.CreateFromTask(OpenClipAsync);
             UpdateClipCommand = ReactiveCommand.CreateFromTask(UpdateClipAsync);
+            DeleteClipCommand = ReactiveCommand.CreateFromTask(DeleteClipAsync);
         }
         public Clip BeginRename()
         {
@@ -118,6 +120,11 @@ namespace ClipBoard.ViewModels
                 .GetRequiredService<ClipsRepository>()
                 .UpdateClipAsync(this.ToRecord());
             this.IsEditing = false;
+        }
+
+        private async Task DeleteClipAsync()
+        {
+            await _services.GetRequiredService<ClipGroup>().DeleteClipAsync(this);
         }
 
         public static Clip ToModel(IServiceProvider services, int? clipGroupId, ClipRecord c) =>

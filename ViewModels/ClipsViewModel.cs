@@ -72,7 +72,6 @@ namespace ClipBoard.ViewModels
         public ReactiveCommand<Unit, Unit> AddClipGroupCommand { get; }
         public ReactiveCommand<ClipGroup, Unit> DeleteClipGroupCommand { get; }
         public ReactiveCommand<IAvaloniaList<Clip>, Unit> AddClipsCommand { get; }
-        public ReactiveCommand<Clip, Unit> DeleteClipCommand { get; }
         public ReactiveCommand<ClipGroup, Unit> ResequenceClipsCommand { get; }
         public ReactiveCommand<Unit, Unit> CloseCommand { get; }
 
