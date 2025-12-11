@@ -2,12 +2,12 @@
 		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 		xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 		xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-		mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+		mc:Ignorable="d" d:DesignWidth="888" d:DesignHeight="450"
 		xmlns:b="using:ClipBoard.Views.Behaviors"
 		xmlns:vm="using:ClipBoard.ViewModels"
 		x:Class="ClipBoard.Views.ClipView"
 		x:DataType="vm:Clip"
-		Title="{Binding Name, DataType={x:Type vm:Clip}}" Height="1000" Width="800" Closing="Window_Closing" >
+		Title="{Binding Name, DataType={x:Type vm:Clip}}" Height="1000" Width="888" Closing="Window_Closing" >
 
 	<Design.DataContext>
 		<vm:Clip/>

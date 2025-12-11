@@ -1,13 +1,15 @@
 ﻿using Avalonia.Collections;
-using AvRichTextBox;
+using Avalonia.Media.Imaging;
+using Avalonia.Threading;
 using ClipBoard.Models;
 using ClipBoard.Services;
-using ClipBoard.Views;
-using DocumentFormat.OpenXml.Bibliography;
+using DocumentFormat.OpenXml.Wordprocessing;
 using Microsoft.Extensions.DependencyInjection;
 using ReactiveUI;
+using ReactiveUI.SourceGenerators;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Reactive;
 using System.Threading.Tasks;
@@ -16,89 +18,83 @@ using System.Windows.Input;
 
 namespace ClipBoard.ViewModels
 {
-    public class Clip : ReactiveObject
+    public partial class Clip : ReactiveObject
     {
         private readonly IServiceProvider _services;
 
         public int? Id { get; set; }
-        public int? ClipGroupId { get; set; }
-        private string _originalName { get; set; } = "";
+        public int ClipGroupId { get; set; }
+        public string? AppId { get; }
+        public string? AppName { get; }
+        public Bitmap AppImage { get; }
+        public DateTime Timestamp { get; }
 
-        private string _name = "";
-        public string Name
-        {
-            get => _name;
-            set => this.RaiseAndSetIfChanged(ref _name, value);
-        }
+        private string _originalName = "";
 
-        private string _description = "";
-        public string Description
-        {
-            get => _description ?? "";
-            set => this.RaiseAndSetIfChanged(ref _description, value);
-        }
+        [Reactive] public string Name { get; set; }
+        [Reactive] public string? Description { get; set; }
+        [Reactive] public string? Value { get; set; }
+        [Reactive] public string? JsonValue { get; set; }
+        [Reactive] public string ContentType { get; set; }
+        [Reactive] public long sizeBytes { get; set; }
+        [Reactive] public string? CopyHotKey { get; set; }
+        [Reactive] public string? PasteHotKey { get; set; }
+        [Reactive] public int SortOrder { get; set; }
+        [Reactive] public bool IsEditing { get; set; }
 
-        private string? _value;
-        public string? Value
-        {
-            get => _value;
-            set => this.RaiseAndSetIfChanged(ref _value, value);
-        }
-
-        private string? _jsonValue;
-        public string? JsonValue
-        {
-            get => _jsonValue;
-            set => this.RaiseAndSetIfChanged(ref _jsonValue, value);
-        }
-
-        private bool _isEditing;
-        public bool IsEditing
-        {
-            get => _isEditing;
-            set => this.RaiseAndSetIfChanged(ref _isEditing, value);
-        }
-        public string MimeType { get; set; } = "";
-        public string? CopyHotKey { get; set; }
-        public string? PasteHotKey { get; set; }
-        public int SortOrder { get; set; }
-
-        public ICommand BeginRenameCommand { get; }
         public ReactiveCommand<Unit, Unit> OpenClipCommand { get; }
-        public ReactiveCommand<Unit, Unit> UpdateClipCommand { get; }
+        public ReactiveCommand<Unit, Clip> UpdateClipCommand { get; }
         public ReactiveCommand<Unit, Unit> DeleteClipCommand { get; }
 
-        public Clip(IServiceProvider services, int? id, int? clipGroupId, string name, string? description, string? value, string? jsonValue, string mimeType, string copyHotKey, string pasteHotKey, int sortOrder)
+        public Clip(IServiceProvider services, int clipGroupId, int sortOrder)
+        {
+            _services = services;
+            Id = null;
+            ClipGroupId = clipGroupId;
+            AppId = "";
+            AppName = "";
+            Name = "";
+            Description = "";
+            Value = "";
+            JsonValue = "";
+            ContentType = "";
+            CopyHotKey = "";
+            PasteHotKey = "";
+            SortOrder = sortOrder;
+            Timestamp = DateTime.UtcNow;
+
+            OpenClipCommand = ReactiveCommand.CreateFromTask(OpenClipAsync);
+            UpdateClipCommand = ReactiveCommand.CreateFromTask<Clip>(UpdateClipAsync);
+            DeleteClipCommand = ReactiveCommand.CreateFromTask(DeleteClipAsync);
+        }
+
+        public Clip(IServiceProvider services, int id, int clipGroupId, string? appId, string? appName, string name, string? description, string? value, string? jsonValue, string contentType, string copyHotKey, string pasteHotKey, int sortOrder, DateTime timestamp)
         {
             _services = services;
             Id = id;
             ClipGroupId = clipGroupId;
+            AppId = appId;
+            AppName = appName;
             Name = name;
-            Description = description ?? "";
+            Description = description;
             Value = value;
             JsonValue = jsonValue;
-            MimeType = mimeType;
+            ContentType = contentType;
             CopyHotKey = copyHotKey;
             PasteHotKey = pasteHotKey;
             SortOrder = sortOrder;
+            Timestamp = timestamp;
 
             OpenClipCommand = ReactiveCommand.CreateFromTask(OpenClipAsync);
             UpdateClipCommand = ReactiveCommand.CreateFromTask(UpdateClipAsync);
             DeleteClipCommand = ReactiveCommand.CreateFromTask(DeleteClipAsync);
         }
+
         public Clip BeginRename()
         {
-            this._originalName = _name;
+            this._originalName = this.Name;
             this.IsEditing = true;
-            return this;
-        }
-
-        public async Task<Clip> ConfirmRename()
-        {
-            await _services
-                .GetRequiredService<ClipsRepository>()
-                .UpdateClipAsync(this.ToRecord());
-            this.IsEditing = false;
+            this.RaisePropertyChanged(nameof(IsEditing));
             return this;
         }
 
@@ -106,20 +102,43 @@ namespace ClipBoard.ViewModels
         {
             this.Name = _originalName;
             this.IsEditing = false;
+            this.RaisePropertyChanged(nameof(IsEditing));
             return this;
         }
+
+        public async Task<Clip> ConfirmRename()
+        {
+            var clipRecord = this.ToRecord();
+
+            await _services
+                    .GetRequiredService<ClipsRepository>()
+                    .UpdateClipAsync(clipRecord);
+
+            this.IsEditing = false;
+            this.RaisePropertyChanged(string.Empty);
+
+            return this;
+        }
+
         private async Task OpenClipAsync()
         {
             var windowService = _services.GetRequiredService<WindowService>();
 
             await windowService.OpenWindowAsync(this);
         }
-        public async Task UpdateClipAsync()
+
+        public async Task<Clip> UpdateClipAsync()
         {
+            var clipRecord = this.ToRecord();
+
             await _services
-                .GetRequiredService<ClipsRepository>()
-                .UpdateClipAsync(this.ToRecord());
+                    .GetRequiredService<ClipsRepository>()
+                    .UpdateClipAsync(clipRecord);
+
             this.IsEditing = false;
+            this.RaisePropertyChanged(string.Empty);
+
+            return this;
         }
 
         private async Task DeleteClipAsync()
@@ -127,19 +146,22 @@ namespace ClipBoard.ViewModels
             await _services.GetRequiredService<ClipGroup>().DeleteClipAsync(this);
         }
 
-        public static Clip ToModel(IServiceProvider services, int? clipGroupId, ClipRecord c) =>
+        public static Clip ToModel(IServiceProvider services, ClipRecord c) =>
             new(
                 services,
-                c.Id,
-                clipGroupId,
+                (int)c.Id!,
+                c.ClipGroupId,
+                c.AppId,
+                c.AppName,
                 c.Name,
                 c.Description,
                 c.Value,
                 c.JsonValue,
-                c.MimeType,
+                c.ContentType,
                 c.CopyHotKey ?? "",
                 c.PasteHotKey ?? "",
-                c.SortOrder
+                c.SortOrder,
+                DateTimeOffset.FromUnixTimeSeconds(c.Timestamp).DateTime
             );
 
         public ClipRecord ToRecord() =>
@@ -147,14 +169,17 @@ namespace ClipBoard.ViewModels
             {
                 Id = Id,
                 ClipGroupId = ClipGroupId,
+                AppId = AppId,
+                AppName = AppName,
                 Name = Name,
                 Description = Description,
                 Value = Value,
                 JsonValue = JsonValue,
+                ContentType = ContentType,
                 CopyHotKey = CopyHotKey,
                 PasteHotKey = PasteHotKey,
-                MimeType = MimeType,
-                SortOrder = SortOrder
+                SortOrder = SortOrder,
+                Timestamp = new DateTimeOffset(Timestamp).ToUnixTimeSeconds()
             };
 
         private static object DecodeValue(string mimeType, byte[] bytes)

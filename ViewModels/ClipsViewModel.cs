@@ -9,7 +9,7 @@ using DryIoc.FastExpressionCompiler.LightExpression;
 using DynamicData;
 using Microsoft.Extensions.DependencyInjection;
 using ReactiveUI;
-using ReactiveUI.Avalonia;
+using ReactiveUI.SourceGenerators;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -23,46 +23,16 @@ using Tmds.DBus.Protocol;
 
 namespace ClipBoard.ViewModels
 {
-    public class ClipsViewModel : ReactiveObject, IScreen
+    public partial class ClipsViewModel : ReactiveObject, IScreen
     {
-        // Serivices
+        // Services
         private readonly IServiceProvider _services;
 
         // UI Properties
-
-        private AvaloniaList<ClipGroup> _clipGroups = new();
-        public AvaloniaList<ClipGroup> ClipGroups
-        {
-            get => _clipGroups;
-            set => this.RaiseAndSetIfChanged(ref _clipGroups, value);
-        }
-
-        private ClipGroup? _selectedClipGroup;
-        public ClipGroup? SelectedClipGroup
-        {
-            get => _selectedClipGroup;
-            set
-            {
-                this.RaiseAndSetIfChanged(ref _selectedClipGroup, value);
-            }
-        }
-
-        private bool _clipGroupNameEditing;
-        public bool ClipGroupNameEditing
-        {
-            get => _clipGroupNameEditing;
-            set => this.RaiseAndSetIfChanged(ref _clipGroupNameEditing, value);
-        }
-
-        private Clip? _openClip;
-        public Clip? OpenClip
-        {
-            get => _openClip;
-            set
-            {
-                this.RaiseAndSetIfChanged(ref _openClip, value);
-            }
-        }
+        [Reactive] public AvaloniaList<ClipGroup> ClipGroups { get; set; } = new();
+        [Reactive] public ClipGroup? SelectedClipGroup { get; set; }
+        [Reactive] public bool ClipGroupNameEditing { get; set; }
+        [Reactive] public Clip? OpenClip { get; set; }
 
         //Routing
         public RoutingState Router => throw new NotImplementedException();
@@ -71,10 +41,10 @@ namespace ClipBoard.ViewModels
         public ReactiveCommand<Unit, Unit> LoadClipGroupsCommand { get; }
         public ReactiveCommand<Unit, Unit> AddClipGroupCommand { get; }
         public ReactiveCommand<ClipGroup, Unit> DeleteClipGroupCommand { get; }
+        public ReactiveCommand<Unit, Unit> AddClipCommand { get; }
         public ReactiveCommand<IAvaloniaList<Clip>, Unit> AddClipsCommand { get; }
         public ReactiveCommand<ClipGroup, Unit> ResequenceClipsCommand { get; }
         public ReactiveCommand<Unit, Unit> CloseCommand { get; }
-
 
         //Interactions
         public Interaction<string, bool> ConfirmDelete { get; } = new();
@@ -84,8 +54,9 @@ namespace ClipBoard.ViewModels
             _services = services;
 
             LoadClipGroupsCommand = ReactiveCommand.CreateFromTask(LoadGroupsAsync);
-            AddClipsCommand = ReactiveCommand.CreateFromTask<IAvaloniaList<Clip>>(clips => AddClipsByGroupAsync(clips));
             AddClipGroupCommand = ReactiveCommand.CreateFromTask(AddClipGroupAsync);
+            AddClipsCommand = ReactiveCommand.CreateFromTask<IAvaloniaList<Clip>>(clips => AddClipsByGroupAsync(clips));
+            AddClipCommand = ReactiveCommand.CreateFromTask(AddClipAsync);
             DeleteClipGroupCommand = ReactiveCommand.CreateFromTask<ClipGroup>(clipGroup => DeleteClipGroupAsync(clipGroup));
             ResequenceClipsCommand = ReactiveCommand.CreateFromTask<ClipGroup>(clipGroup => ResequenceClipsAsync(clipGroup));
             CloseCommand = ReactiveCommand.Create(() => { });
@@ -93,8 +64,6 @@ namespace ClipBoard.ViewModels
 
         private async Task LoadGroupsAsync()
         {
-            ClipGroups.Clear();
-
             var clipGroupsRepository = _services.GetRequiredService<ClipGroupsRepository>();
 
             var groups = await clipGroupsRepository.GetAllGroupsAsync();
@@ -105,7 +74,7 @@ namespace ClipBoard.ViewModels
 
             SelectedClipGroup = ClipGroups.FirstOrDefault();
         }
-        
+
         private async Task AddClipGroupAsync()
         {
             var clipGroupsRepository = _services.GetRequiredService<ClipGroupsRepository>();
@@ -140,6 +109,22 @@ namespace ClipBoard.ViewModels
             SelectedClipGroup = ClipGroups.FirstOrDefault();
         }
 
+        private async Task AddClipAsync()
+        {
+            if (SelectedClipGroup == null) return;
+
+            var clipsRepository = _services.GetRequiredService<ClipsRepository>();
+            var clip = new Clip(
+              _services,
+              (int)SelectedClipGroup.Id!,
+              ClipGroups.Count);
+
+            var record = await clipsRepository.AddClipAsync(clip.ToRecord());
+            var newModel = Clip.ToModel(_services, record);
+            SelectedClipGroup?.Clips.Add(newModel);
+            await newModel.OpenClipCommand.Execute();
+        }
+
         private async Task AddClipsByGroupAsync(IAvaloniaList<Clip> newClips)
         {
             var clipsRepository = _services.GetRequiredService<ClipsRepository>();
@@ -154,7 +139,7 @@ namespace ClipBoard.ViewModels
             await clipsRepository.AddClipsAsync(newClips);
         }
 
-        private async Task ResequenceClipsAsync (ClipGroup clipGroup)
+        private async Task ResequenceClipsAsync(ClipGroup clipGroup)
         {
             var clipsRepository = _services.GetRequiredService<ClipsRepository>();
 

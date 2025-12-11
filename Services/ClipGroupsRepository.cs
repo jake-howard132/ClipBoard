@@ -1,4 +1,5 @@
-﻿using ClipBoard.Models;
+﻿using Avalonia.Controls.Mixins;
+using ClipBoard.Models;
 using ClipBoard.ViewModels;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -21,13 +22,21 @@ namespace ClipBoard.Services
             _services = services;
             _db = _services.GetRequiredService<Db>();
         }
-        public async Task<IEnumerable<ClipGroup>?> GetAllGroupsAsync()
+        public async Task<IEnumerable<ClipGroup>> GetAllGroupsAsync()
         {
-            return await _db.ClipGroups
-            .Include(g => g.Clips)
-            .OrderBy(g => g.SortOrder)
-            .Select(g => ClipGroup.ToModel(_services, g))
-            .ToListAsync();
+            try
+            {
+                return await _db.ClipGroups
+                .Include(g => g.Clips)
+                .OrderBy(g => g.SortOrder)
+                .Select(g => ClipGroup.ToModel(_services, g))
+                .ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            return Enumerable.Empty<ClipGroup>();
         }
         public async Task<ClipGroupRecord> AddClipGroupAsync(ClipGroupRecord clipGroup)
         {

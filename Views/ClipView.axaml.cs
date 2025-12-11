@@ -24,6 +24,8 @@ public partial class ClipView : ReactiveWindow<Clip>
                 if (this.ViewModel is not Clip clip) return;
 
                 this.webView.PostWebMessageAsString(clip.JsonValue is "" or null ? "{}" : clip.JsonValue, uri);
+
+                this.webView.OpenDevToolsWindow();
             };
 
             this.DataContextChanged += (s, e) =>
@@ -49,6 +51,8 @@ public partial class ClipView : ReactiveWindow<Clip>
             };
 
             webView.Url = uri;
+
+            
         });
     }
 

@@ -6,6 +6,7 @@ using ClipBoard.Models;
 using ClipBoard.ViewModels;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using SkiaSharp;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -25,35 +26,37 @@ namespace ClipBoard.Services
             _clipboard = clipboard;
         }
 
-        // -----------------------
-        // SETTERS
-        // -----------------------
-
-        public Task SetTextAsync(string text)
+        public async Task<Dictionary<DataFormat, object?>> GetContentAsync()
         {
-            var dt = new AsyncDataTransfer();
-            dt.Add(DataFormat.Text, text);
-            return _clipboard.SetDataAsync(dt);
-        }
+            var content = new Dictionary<DataFormat, object?>();
 
-        public Task SetRtfAsync(string rtf)
-        {
-            var dt = new AsyncDataTransfer();
-            dt.Add(CustomDataFormats.Rtf, rtf);
-            return _clipboard.SetDataAsync(dt);
-        }
+            var data = await _clipboard.TryGetDataAsync();
+            if (data == null)
+                return content;
 
-        // Accept a stream (caller should ensure it's at position 0)
-        public Task SetImageAsync(Stream imageStream, DataFormat format)
-        {
-            var dt = new AsyncDataTransfer();
-            dt.Add(CustomDataFormats.Image, imageStream);
-            return _clipboard.SetDataAsync(dt);
-        }
+            using (data)
+            {
+                foreach (var fmt in data.Formats)
+                {
+                    switch (true)
+                    {
+                        case true when data.Contains(DataFormat.Text):
+                            var text = await data.TryGetTextAsync();
+                            content.Add(DataFormat.Text, text);
+                            break;
+                        case true when data.Contains(CustomDataFormats.Rtf):
+                            var rtf = await data.TryGetValueAsync(CustomDataFormats.Rtf);
+                            content.Add(CustomDataFormats.Rtf, rtf);
+                            break;
+                        case true when data.Contains(CustomDataFormats.Image):
+                            var imageBytes = await data.TryGetValueAsync(CustomDataFormats.Image);
+                            content.Add(CustomDataFormats.Image, imageBytes);
+                            break;
+                    }
+                }
+            }
 
-    }
-    public static class CustomDataFormats
-    {
-        public static readonly DataFormat Rtf = DataFormat.CreateStringPlatformFormat("application/rtf");
+            return content;
+        }
     }
 }

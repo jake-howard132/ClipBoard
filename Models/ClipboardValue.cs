@@ -10,6 +10,5 @@ namespace ClipBoard.Models
         public string? Text { get; set; }
         public string? Rtf { get; set; }
         public MemoryStream? Image { get; set; }
-        public Dictionary<DataFormat, object?> Raw { get; set; } = new();
     }
 }

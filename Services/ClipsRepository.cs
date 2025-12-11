@@ -76,15 +76,17 @@ namespace ClipBoard.Services
                 await _db.SaveChangesAsync();
             }
         }
-        public async Task UpdateClipAsync(ClipRecord clip)
+        public async Task<ClipRecord> UpdateClipAsync(ClipRecord clip)
         {
             var tracked = await _db.Clips.FirstOrDefaultAsync(c => c.Id == clip.Id);
 
-            if (tracked is null) return;
+            if (tracked is null) return clip;
 
             _db.Entry(tracked).CurrentValues.SetValues(clip);
 
             await _db.SaveChangesAsync();
+
+            return clip;
         }
 
         public async Task UpdateClipOrdersAsync(int clipGroupId, IAvaloniaList<Clip> clips)

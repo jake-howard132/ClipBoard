@@ -221,12 +221,6 @@ export function SimpleEditor() {
 				class: 'simple-editor',
 			},
 		},
-		// onCreate() {
-		// 	const firstMessage = getFirstMessage();
-		// 	if (firstMessage) editor.commands.setContent(firstMessage);
-
-		// 	subscribeToMessage((value) => editor.commands.setContent(value));
-		// },
 		extensions: [
 			StarterKit.configure({
 				horizontalRule: false,
@@ -240,7 +234,6 @@ export function SimpleEditor() {
 			TaskList,
 			TaskItem.configure({ nested: true }),
 			Highlight.configure({ multicolor: true }),
-			Image,
 			Typography,
 			Superscript,
 			Subscript,
@@ -250,7 +243,13 @@ export function SimpleEditor() {
 				maxSize: MAX_FILE_SIZE,
 				limit: 3,
 				upload: handleImageUpload,
+				onSuccess: (result) =>
+					editor.chain().focus().setImage({ src: result }).run(),
 				onError: (error) => console.error('Upload failed:', error),
+			}),
+			Image.configure({
+				inline: true,
+				allowBase64: true,
 			}),
 		],
 	});

@@ -44,7 +44,6 @@ namespace ClipBoard.Views.Behaviors
             //var message = System.Text.Json.JsonSerializer.(e.MessageAsJson);
         }
 
-
         public static void SetLoadClipContent(AvaloniaObject element, ICommand? value) => element.SetValue(LoadClipContentProperty, value);
         public static ICommand? GetLoadClipContent(AvaloniaObject element) => element.GetValue(LoadClipContentProperty);
     }

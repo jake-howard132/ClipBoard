@@ -46,16 +46,12 @@ namespace ClipBoard.Views.Behaviors
 
             IsFocusedProperty.Changed.AddClassHandler<Control>((control, e) =>
             {
-                if (e?.NewValue is bool && (bool)e.NewValue)
+                if (control is TextBox tb && e ?.NewValue is bool && (bool)e.NewValue)
                 {
-                    // Delay to ensure TextBox is loaded and visible
                     Dispatcher.UIThread.Post(() =>
                     {
-                        if (control is TextBox tb)
-                        {
                             tb.Focus();
                             tb.SelectAll();
-                        }
                     }, DispatcherPriority.Background);
                 }
             });

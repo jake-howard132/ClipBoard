@@ -40,8 +40,6 @@ namespace ClipBoard.Services
             }
 
             return Task.CompletedTask;
-
-
         }
     }
 }

@@ -7,8 +7,7 @@ using System.Threading.Tasks;
 
 /*
     An implementation of both IAsyncDataTransfer and IDataTransfer interfaces for syncand async clipboards depending on platform.
-    This class allows adding data in various formats and provides both synchronous
-    and asynchronous access to the data.
+    This class allows adding data in various formats and provides both synchronous and asynchronous access to the data.
 */
 namespace ClipBoard.Services
 {
