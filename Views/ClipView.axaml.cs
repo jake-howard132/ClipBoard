@@ -44,7 +44,7 @@ public partial class ClipView : ReactiveWindow<Clip>
                 message.TryGetProperty("json", out var json);
                 message.TryGetProperty("text", out var text);
 
-                clip.Value = text.ToString();
+                clip.Value = text.ToString().Trim();
                 clip.JsonValue = json.ToString();
 
                 clip.UpdateClipCommand.Execute();

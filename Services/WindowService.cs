@@ -1,4 +1,5 @@
 ﻿using Avalonia.Controls;
+using ClipBoard.Models;
 using ClipBoard.ViewModels;
 using ClipBoard.Views;
 using Microsoft.Extensions.DependencyInjection;
@@ -20,6 +21,7 @@ namespace ClipBoard.Services
         {
             _services = services;
         }
+
         public Task OpenWindowAsync<TViewModel>(TViewModel vm) where TViewModel : ReactiveObject
         {
             try
@@ -27,6 +29,7 @@ namespace ClipBoard.Services
                 Window window = vm switch
                 {
                     Clip => _services.GetRequiredService<ClipView>(),
+                    SettingsViewModel => _services.GetRequiredService<SettingsView>(),
                     _ => throw new NotImplementedException($"No window registered for {typeof(TViewModel)}")
                 };
 

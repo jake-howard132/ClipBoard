@@ -50,13 +50,22 @@ namespace ClipBoard
                 .AddScoped<ClipGroupsRepository>()
                 .UseMicrosoftDependencyResolver();
 
-            var sp = services.BuildServiceProvider();
+            var serviceProvider = services.BuildServiceProvider();
 
+            // Run migrations
+            using (var scope = serviceProvider.CreateScope())
+            {
+                var db = scope.ServiceProvider.GetRequiredService<Db>();
+                db.Database.Migrate();
+            }
+
+            // Splat / ReactiveUI setup
             var resolver = Locator.CurrentMutable;
             resolver.InitializeSplat();
             resolver.InitializeReactiveUI();
-            resolver.RegisterConstant(sp, typeof(IServiceProvider));
-            return services.BuildServiceProvider();
+            resolver.RegisterConstant(serviceProvider, typeof(IServiceProvider));
+
+            return serviceProvider;
         }
     }
 }

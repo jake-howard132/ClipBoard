@@ -30,7 +30,13 @@ namespace ClipBoard.ViewModels
 
         // UI Properties
         [Reactive] public AvaloniaList<ClipGroup> ClipGroups { get; set; } = new();
-        [Reactive] public ClipGroup? SelectedClipGroup { get; set; }
+        
+        private ClipGroup? _selectedClipGroup;
+        public ClipGroup? SelectedClipGroup {
+            get => _selectedClipGroup;
+            set => this.RaiseAndSetIfChanged(ref _selectedClipGroup, value);
+        }
+
         [Reactive] public bool ClipGroupNameEditing { get; set; }
         [Reactive] public Clip? OpenClip { get; set; }
 

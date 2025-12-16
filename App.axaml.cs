@@ -34,7 +34,7 @@ namespace ClipBoard
     public partial class App : Application
     {
         public static IServiceProvider Services { get; private set; } = null!;
-        private Window? _ClipsView;
+        private Window? _MainView;
         private Task? _serverTask;
         private int port = 2380;
 
@@ -58,7 +58,7 @@ namespace ClipBoard
             {
                 desktop.ShutdownMode = ShutdownMode.OnExplicitShutdown;
 
-                _ClipsView = new MainView
+                _MainView = new MainView
                 {
                     DataContext = Services.GetRequiredService<ClipsViewModel>(),
                     Height = 1000,
@@ -84,15 +84,15 @@ namespace ClipBoard
 
         private void ToggleClipsView()
         {
-            if (_ClipsView == null)
+            if (_MainView == null)
                 return;
 
-            if (!_ClipsView.IsVisible)
+            if (!_MainView.IsVisible)
             {
-                _ClipsView.Activate();
-                _ClipsView.Show();
+                _MainView.Activate();
+                _MainView.Show();
             }
-            else _ClipsView.Hide();
+            else _MainView.Hide();
         }
 
         private WebApplication CreateWebServer()
@@ -124,8 +124,6 @@ namespace ClipBoard
                     }
                 )
                 .AddControllers();
-
-            //_app?.MapControllers();
             
             var app = builder.Build();
 
@@ -144,29 +142,6 @@ namespace ClipBoard
                 })
                 .UseRouting()
                 .UseCors("any-origin");
-
-            //app.MapPost("/saveclip", async (HttpRequest req) =>
-            //{
-            //    using (StreamReader reader = new StreamReader(req.Body, Encoding.UTF8))
-            //    {
-            //        var message = await reader.ReadToEndAsync();
-
-            //        Dispatcher.UIThread.Post(() =>
-            //        {
-            //            var vm = Services.GetRequiredService<ClipsViewModel>();
-
-            //            if (vm.SelectedClipGroup is null || vm.OpenClip is null) return;
-
-                        
-            //            var clip = vm.SelectedClipGroup.Clips.FirstOrDefault((c) => c.Id == vm.OpenClip.Id);
-
-            //            if (clip is null) return;
-            //            clip.Value = message;
-            //        });
-
-            //        return Results.Ok($"Data received: {message}");
-            //    }
-            //});
 
             return app;
         }

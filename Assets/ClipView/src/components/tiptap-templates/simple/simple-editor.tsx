@@ -90,8 +90,6 @@ const MainToolbarContent = ({
 }) => {
 	return (
 		<>
-			<Spacer />
-
 			<ToolbarGroup>
 				<Button
 					data-style='primary'
@@ -162,13 +160,14 @@ const MainToolbarContent = ({
 				<ImageUploadButton text='Add' />
 			</ToolbarGroup>
 
-			<Spacer />
+			{/* <Spacer /> */}
 
-			{isMobile && <ToolbarSeparator />}
+			{/* <ToolbarSeparator /> */}
 
 			<ToolbarGroup>
 				<ThemeToggle />
 			</ToolbarGroup>
+			<Spacer></Spacer>
 		</>
 	);
 };
@@ -230,10 +229,27 @@ export function SimpleEditor() {
 				},
 			}),
 			HorizontalRule,
-			TextAlign.configure({ types: ['heading', 'paragraph'] }),
+			TextAlign.configure({
+				types: ['heading', 'paragraph'],
+				defaultAlignment: 'left',
+			}),
 			TaskList,
 			TaskItem.configure({ nested: true }),
 			Highlight.configure({ multicolor: true }),
+			Pages.configure({
+        pageFormat: 'A4',
+        header: threeColumnHeaderFooter({
+          left: 'Page header',
+          center: '',
+          right: '',
+        }),
+        footer: threeColumnHeaderFooter({
+          left: 'Page footer',
+          center: '',
+          right: '{page} of {total}',
+        }),
+        pageBreakBackground: '#f7f7f7',
+      })
 			Typography,
 			Superscript,
 			Subscript,
@@ -298,12 +314,6 @@ export function SimpleEditor() {
 								};
 
 								window.chrome?.webview?.postMessage(JSON.stringify(message));
-
-								// fetch('http://localhost:2380/saveclip', {
-								// 	method: 'POST',
-								// 	headers: { 'Content-Type': 'application/json' },
-								// 	body: JSON.stringify({ value: message }),
-								// });
 							}}
 							isMobile={isMobile}
 						/>

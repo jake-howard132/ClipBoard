@@ -11,11 +11,22 @@ namespace ClipBoard.Services
         {
         }
 
+        public DbSet<SettingsRecord> Settings => Set<SettingsRecord>();
         public DbSet<ClipGroupRecord> ClipGroups => Set<ClipGroupRecord>();
         public DbSet<ClipRecord> Clips => Set<ClipRecord>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<SettingsRecord>(s =>
+            {
+                s.ToTable("Settings");
+                s.HasKey(s => s.Id);
+
+                s
+                  .Property(s => s.Id)
+                  .ValueGeneratedOnAdd();
+            });
+
             modelBuilder.Entity<ClipGroupRecord>(g =>
             {
                 g.ToTable("ClipGroups");
@@ -26,13 +37,13 @@ namespace ClipBoard.Services
                 .ValueGeneratedOnAdd();
 
                 g
-                .HasMany(g => g.Clips)
-                .WithOne(c => c.ClipGroup)
-                .HasForeignKey(c => c.ClipGroupId)
-                .OnDelete(DeleteBehavior.Cascade); // When a group is deleted, delete its clips
+                  .HasMany(g => g.Clips)
+                  .WithOne(c => c.ClipGroup)
+                  .HasForeignKey(c => c.ClipGroupId)
+                  .OnDelete(DeleteBehavior.Cascade); // When a group is deleted, delete its clips
 
                 g.Property(g => g.SortOrder)
-                .IsRequired();
+                  .IsRequired();
             });
 
             modelBuilder.Entity<ClipRecord>(c =>
@@ -41,11 +52,11 @@ namespace ClipBoard.Services
                 c.HasIndex(c => new { c.ClipGroupId, c.SortOrder });
 
                 c
-                .Property(c => c.Id)
-                .ValueGeneratedOnAdd();
+                  .Property(c => c.Id)
+                  .ValueGeneratedOnAdd();
 
                 c.Property(c => c.SortOrder)
-                .IsRequired();
+                  .IsRequired();
             });
         }
     }

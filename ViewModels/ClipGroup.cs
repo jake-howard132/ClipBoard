@@ -47,6 +47,8 @@ namespace ClipBoard.ViewModels
         {
             this._originalName = Name;
             this.IsEditing = true;
+
+            this.RaisePropertyChanged(string.Empty);
             return this;
         }
 
@@ -56,6 +58,8 @@ namespace ClipBoard.ViewModels
                 .GetRequiredService<ClipGroupsRepository>()
                 .UpdateClipGroupAsync(this.ToRecord());
             this.IsEditing = false;
+            this.RaisePropertyChanged(string.Empty);
+
             return this;
         }
 
@@ -63,6 +67,8 @@ namespace ClipBoard.ViewModels
         {
             this.Name = _originalName;
             this.IsEditing = false;
+
+            this.RaisePropertyChanged(string.Empty);
             return this;
         }
 

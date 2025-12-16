@@ -16,6 +16,7 @@ namespace ClipBoard.Views.Behaviors
                 //control.DoubleTapped -= OpenClip;
                 //control.DoubleTapped += OpenClip;
             });
+
         }
 
         private static void OpenClip(object? sender, TappedEventArgs e)

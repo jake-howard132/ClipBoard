@@ -1,4 +1,5 @@
 ﻿using Avalonia.Controls;
+using Avalonia.Input;
 using Avalonia.Interactivity;
 using ClipBoard.ViewModels;
 using MsBox.Avalonia;
@@ -33,7 +34,7 @@ public partial class MainView : ReactiveWindow<ClipsViewModel>
             vm.LoadClipGroupsCommand.Execute();
         };
     }
-    private void Item_DoubleTapped(object sender, RoutedEventArgs e)
+    private void Item_DoubleTapped(object? sender, TappedEventArgs e)
     {
         if (sender is not Control control || control.DataContext is not ClipBoard.ViewModels.Clip clip) return;
 

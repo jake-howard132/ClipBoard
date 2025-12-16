@@ -12,6 +12,7 @@
 
 .tiptap-toolbar {
   display: flex;
+  flex-grow: 0;
   align-items: center;
   gap: 0.25rem;
 
