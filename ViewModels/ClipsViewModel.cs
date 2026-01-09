@@ -32,7 +32,8 @@ namespace ClipBoard.ViewModels
         [Reactive] public AvaloniaList<ClipGroup> ClipGroups { get; set; } = new();
         
         private ClipGroup? _selectedClipGroup;
-        public ClipGroup? SelectedClipGroup {
+        public ClipGroup? SelectedClipGroup 
+        {
             get => _selectedClipGroup;
             set => this.RaiseAndSetIfChanged(ref _selectedClipGroup, value);
         }
@@ -54,6 +55,21 @@ namespace ClipBoard.ViewModels
 
         //Interactions
         public Interaction<string, bool> ConfirmDelete { get; } = new();
+
+
+        //Design time suppot
+        public ClipsViewModel()
+        {
+            _services = new ServiceCollection().BuildServiceProvider();
+
+            LoadClipGroupsCommand = ReactiveCommand.CreateFromTask(LoadGroupsAsync);
+            AddClipGroupCommand = ReactiveCommand.CreateFromTask(AddClipGroupAsync);
+            AddClipsCommand = ReactiveCommand.CreateFromTask<IAvaloniaList<Clip>>(clips => AddClipsByGroupAsync(clips));
+            AddClipCommand = ReactiveCommand.CreateFromTask(AddClipAsync);
+            DeleteClipGroupCommand = ReactiveCommand.CreateFromTask<ClipGroup>(clipGroup => DeleteClipGroupAsync(clipGroup));
+            ResequenceClipsCommand = ReactiveCommand.CreateFromTask<ClipGroup>(clipGroup => ResequenceClipsAsync(clipGroup));
+            CloseCommand = ReactiveCommand.Create(() => { });
+        }
 
         public ClipsViewModel(IServiceProvider services)
         {
@@ -91,14 +107,14 @@ namespace ClipBoard.ViewModels
                 "New ClipGroup",
                 "",
                 new AvaloniaList<Clip>(),
-                ClipGroups.Count,
+                ClipGroups.Count - 1,
                 true);
 
             var record = await clipGroupsRepository.AddClipGroupAsync(clipGroup.ToRecord());
+            var model = ClipGroup.ToModel(_services, record);
+            ClipGroups.Insert(ClipGroups.Count - 1, model);
 
-            ClipGroups.Add(ClipGroup.ToModel(_services, record));
-
-            SelectedClipGroup = ClipGroups.Last();
+            SelectedClipGroup = model;
             SelectedClipGroup.IsEditing = true;
         }
 
@@ -111,7 +127,6 @@ namespace ClipBoard.ViewModels
 
             await clipGroupsRepository.DeleteClipGroupAsync(clipGroup.ToRecord());
             ClipGroups.Remove(clipGroup);
-            await ResequenceClipsAsync(clipGroup);
             SelectedClipGroup = ClipGroups.FirstOrDefault();
         }
 
@@ -120,10 +135,7 @@ namespace ClipBoard.ViewModels
             if (SelectedClipGroup == null) return;
 
             var clipsRepository = _services.GetRequiredService<ClipsRepository>();
-            var clip = new Clip(
-              _services,
-              (int)SelectedClipGroup.Id!,
-              ClipGroups.Count);
+            var clip = new Clip(_services, (int)SelectedClipGroup.Id!);
 
             var record = await clipsRepository.AddClipAsync(clip.ToRecord());
             var newModel = Clip.ToModel(_services, record);

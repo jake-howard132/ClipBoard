@@ -28,7 +28,8 @@ namespace ClipBoard.Services
             {
                 return await _db.ClipGroups
                 .Include(g => g.Clips)
-                .OrderBy(g => g.SortOrder)
+                .OrderByDescending(g => g.IsDefault)
+                .ThenBy(g => g.SortOrder)
                 .Select(g => ClipGroup.ToModel(_services, g))
                 .ToListAsync();
             }
@@ -40,9 +41,21 @@ namespace ClipBoard.Services
         }
         public async Task<ClipGroupRecord> AddClipGroupAsync(ClipGroupRecord clipGroup)
         {
-            await _db.ClipGroups.AddAsync(clipGroup);
-            await _db.SaveChangesAsync();
-            return clipGroup;
+            try
+            {
+                await _db.ClipGroups
+                    .Where (g => g.IsDefault == true)
+                    .ExecuteUpdateAsync(g => g.SetProperty(c => c.SortOrder, c => c.SortOrder + 1));
+                await _db.ClipGroups.AddAsync(clipGroup);
+                await _db.SaveChangesAsync();
+                return clipGroup;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"{ex.Message}");
+            }
+
+            return new ClipGroupRecord();
         }
         public async Task<ClipGroupRecord> DeleteClipGroupAsync(ClipGroupRecord clipGroup)
         {

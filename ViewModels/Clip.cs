@@ -3,7 +3,6 @@ using Avalonia.Media.Imaging;
 using Avalonia.Threading;
 using ClipBoard.Models;
 using ClipBoard.Services;
-using DocumentFormat.OpenXml.Wordprocessing;
 using Microsoft.Extensions.DependencyInjection;
 using ReactiveUI;
 using ReactiveUI.SourceGenerators;
@@ -20,14 +19,14 @@ namespace ClipBoard.ViewModels
 {
     public partial class Clip : ReactiveObject
     {
-        private readonly IServiceProvider _services;
+        private readonly IServiceProvider? _services;
 
         public int? Id { get; set; }
         public int ClipGroupId { get; set; }
-        public string? AppId { get; }
-        public string? AppName { get; }
-        public Bitmap AppImage { get; }
-        public DateTime Timestamp { get; }
+        public string? AppId { get; set; }
+        public string? AppName { get; set; }
+        public Bitmap? AppImage { get; set; }
+        public DateTime Timestamp { get; set; }
 
         private string _originalName = "";
 
@@ -46,21 +45,45 @@ namespace ClipBoard.ViewModels
         public ReactiveCommand<Unit, Clip> UpdateClipCommand { get; }
         public ReactiveCommand<Unit, Unit> DeleteClipCommand { get; }
 
-        public Clip(IServiceProvider services, int clipGroupId, int sortOrder)
+        public Clip()
+        {
+            Name = "";
+            ContentType = "";
+            OpenClipCommand = ReactiveCommand.CreateFromTask(OpenClipAsync);
+            UpdateClipCommand = ReactiveCommand.CreateFromTask<Clip>(UpdateClipAsync);
+            DeleteClipCommand = ReactiveCommand.CreateFromTask(DeleteClipAsync);
+        }
+
+        public Clip(IServiceProvider services, string? appID, string? appName, string contentType, string value)
+        {
+            var jsonValue = contentType == "image" ? $"{{ \"type\":\"doc\",\"content\":[]}}" :
+                            contentType == "html" ? $"{{ \"type\":\"doc\",\"content\":[]}}" :
+                            contentType == "text" ? $"{{ \"type\":\"doc\",\"content\":[]}}" : null;
+
+            _services = services;
+            ClipGroupId = 0;
+            AppId = appID;
+            AppName = appName;
+            Name = "New Clip";
+            Value = value;
+            JsonValue = jsonValue;
+            ContentType = contentType;
+            Timestamp = DateTime.UtcNow;
+
+            OpenClipCommand = ReactiveCommand.CreateFromTask(OpenClipAsync);
+            UpdateClipCommand = ReactiveCommand.CreateFromTask<Clip>(UpdateClipAsync);
+            DeleteClipCommand = ReactiveCommand.CreateFromTask(DeleteClipAsync);
+        }
+
+        public Clip(IServiceProvider services, int clipGroupId)
         {
             _services = services;
             Id = null;
             ClipGroupId = clipGroupId;
-            AppId = "";
-            AppName = "";
-            Name = "";
-            Description = "";
+            Name = "New Clip";
             Value = "";
-            JsonValue = "";
-            ContentType = "";
-            CopyHotKey = "";
-            PasteHotKey = "";
-            SortOrder = sortOrder;
+            JsonValue = "{ \"type\":\"doc\",\"content\":[]}";
+            ContentType = "text";
             Timestamp = DateTime.UtcNow;
 
             OpenClipCommand = ReactiveCommand.CreateFromTask(OpenClipAsync);
@@ -161,7 +184,9 @@ namespace ClipBoard.ViewModels
                 c.CopyHotKey ?? "",
                 c.PasteHotKey ?? "",
                 c.SortOrder,
-                DateTimeOffset.FromUnixTimeSeconds(c.Timestamp).DateTime
+                DateTimeOffset
+                    .FromUnixTimeSeconds(c.Timestamp)
+                    .DateTime
             );
 
         public ClipRecord ToRecord() =>

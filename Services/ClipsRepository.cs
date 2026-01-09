@@ -38,7 +38,7 @@ namespace ClipBoard.Services
                 }).FirstOrDefaultAsync();
         }
 
-        public async Task<IEnumerable<ClipRecord>> GetClipsByGroupAsync(int clipGroupId)
+        public async Task<ICollection<ClipRecord>> GetClipsByGroupAsync(int clipGroupId)
         {
             return await _db.Clips
                 .Where(c => c.ClipGroupId == clipGroupId)
@@ -50,6 +50,12 @@ namespace ClipBoard.Services
         {
             try
             {
+                var maxOrder = await _db.Clips
+                    .Where(c => c.ClipGroupId == clip.ClipGroupId)
+                    .MaxAsync(c => (int?)c.SortOrder);
+
+                clip.SortOrder = (maxOrder ?? -1) + 1;
+
                 await _db.Clips.AddAsync(clip);
                 await _db.SaveChangesAsync();
             }
@@ -61,7 +67,7 @@ namespace ClipBoard.Services
             return clip;
         }
 
-        public async Task AddClipsAsync(IAvaloniaList<Clip> clips)
+        public async Task AddClipsAsync(IEnumerable<Clip> clips)
         {
             await _db.Clips.AddRangeAsync(clips.Select(c => c.ToRecord()));
             await _db.SaveChangesAsync();

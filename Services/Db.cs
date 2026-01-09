@@ -1,4 +1,5 @@
 ﻿using ClipBoard.Models;
+using ClipBoard.ViewModels;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.IO;

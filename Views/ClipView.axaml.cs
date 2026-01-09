@@ -1,6 +1,5 @@
 using Avalonia.Controls;
 using ClipBoard.ViewModels;
-using DocumentFormat.OpenXml.Drawing.Diagrams;
 using ReactiveUI;
 using ReactiveUI.Avalonia;
 using System;
@@ -13,12 +12,12 @@ public partial class ClipView : ReactiveWindow<Clip>
 {
     public ClipView()
     {
+        InitializeComponent();
+
         var uri = new Uri("http://localhost:2380");
 
         this.WhenActivated(disposables =>
         {
-            InitializeComponent();
-
             this.webView.NavigationCompleted += (s, e) =>
             {
                 if (this.ViewModel is not Clip clip) return;
@@ -51,8 +50,6 @@ public partial class ClipView : ReactiveWindow<Clip>
             };
 
             webView.Url = uri;
-
-            
         });
     }
 

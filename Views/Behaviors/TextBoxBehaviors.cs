@@ -4,6 +4,7 @@ using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
+using ClipBoard.ViewModels;
 using System.Windows.Input;
 
 namespace ClipBoard.Views.Behaviors
@@ -13,6 +14,10 @@ namespace ClipBoard.Views.Behaviors
         public static readonly AttachedProperty<ICommand?> BeginRenameProperty = AvaloniaProperty.RegisterAttached<Control, ICommand?>("BeginRename", typeof(TextBoxBehaviors));
         public static readonly AttachedProperty<ICommand?> ConfirmRenameProperty = AvaloniaProperty.RegisterAttached<Control, ICommand?>("ConfirmRename", typeof(TextBoxBehaviors));
         public static readonly AttachedProperty<ICommand?> CancelRenameProperty = AvaloniaProperty.RegisterAttached<Control, ICommand?>("CancelRename", typeof(TextBoxBehaviors));
+
+        public static readonly AttachedProperty<ICommand?> DragProperty = AvaloniaProperty.RegisterAttached<Control, ICommand?>("Drag", typeof(TextBoxBehaviors));
+        public static readonly AttachedProperty<ICommand?> DropProperty = AvaloniaProperty.RegisterAttached<Control, ICommand?>("Drop", typeof(TextBoxBehaviors));
+
         public static readonly AttachedProperty<bool> IsFocusedProperty = AvaloniaProperty.RegisterAttached<Control, bool>("IsFocused", typeof(TextBoxBehaviors));
 
         static TextBoxBehaviors()
@@ -44,14 +49,26 @@ namespace ClipBoard.Views.Behaviors
                 control.KeyDown += OnKeyDown;
             });
 
+            DragProperty.Changed.AddClassHandler<Control>((control, e) =>
+            {
+                control.PointerPressed -= OnDrag;
+                control.PointerPressed += OnDrag;
+            });
+
+            DropProperty.Changed.AddClassHandler<Control>((control, e) =>
+            {
+                control.KeyDown -= OnKeyDown;
+                control.KeyDown += OnKeyDown;
+            });
+
             IsFocusedProperty.Changed.AddClassHandler<Control>((control, e) =>
             {
-                if (control is TextBox tb && e ?.NewValue is bool && (bool)e.NewValue)
+                if (control is TextBox tb && e?.NewValue is bool && (bool)e.NewValue)
                 {
                     Dispatcher.UIThread.Post(() =>
                     {
-                            tb.Focus();
-                            tb.SelectAll();
+                        tb.Focus();
+                        tb.SelectAll();
                     }, DispatcherPriority.Background);
                 }
             });
@@ -130,6 +147,27 @@ namespace ClipBoard.Views.Behaviors
             var command = GetCancelRename(tb);
             if (command?.CanExecute(command) == true)
                 command.Execute(command);
+        }
+
+        private static void OnDrag(object? sender, PointerPressedEventArgs e)
+        {
+            if (!e.Properties.IsLeftButtonPressed || sender is not Control c) return;
+
+            //c.PointerMoved -= DoDrag;
+            //c.PointerMoved += DoDrag;
+
+        }
+
+        private static void DoDrag()
+        {
+
+        }
+
+        private static void OnDrop(Control c)
+        {
+            //var command = GetCancelRename(tb);
+            //if (command?.CanExecute(command) == true)
+            //    command.Execute(command);
         }
 
         public static void SetBeginRename(AvaloniaObject element, ICommand? value) => element.SetValue(BeginRenameProperty, value);

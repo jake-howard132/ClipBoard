@@ -2,7 +2,6 @@ using Avalonia;
 using Avalonia.Controls;
 using ClipBoard.Models;
 using ClipBoard.ViewModels;
-using DocumentFormat.OpenXml.Drawing.Diagrams;
 using ReactiveUI;
 using ReactiveUI.Avalonia;
 using System;
@@ -15,6 +14,5 @@ public partial class SettingsView : ReactiveWindow<SettingsViewModel>
 {
     public SettingsView()
     {
-        
     }
 };

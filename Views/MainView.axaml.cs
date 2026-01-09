@@ -14,6 +14,8 @@ public partial class MainView : ReactiveWindow<ClipsViewModel>
 {
     public MainView()
     {
+        InitializeComponent();
+
         this.WhenActivated(disposables =>
         {
             InitializeComponent();
@@ -26,13 +28,16 @@ public partial class MainView : ReactiveWindow<ClipsViewModel>
 
                 interaction.SetOutput(result == ButtonResult.Yes);
             });
-        });
-        this.Initialized += (sender, args) =>
-        {
-            if (this.ViewModel is not ClipsViewModel vm) return;
 
             vm.LoadClipGroupsCommand.Execute();
-        };
+
+        });
+        //this.Initialized += (sender, args) =>
+        //{
+        //    if (this.ViewModel is not ClipsViewModel vm) return;
+
+        //    vm.LoadClipGroupsCommand.Execute();
+        //};
     }
     private void Item_DoubleTapped(object? sender, TappedEventArgs e)
     {
@@ -45,5 +50,15 @@ public partial class MainView : ReactiveWindow<ClipsViewModel>
     {
         this.Hide();
         e.Cancel = true;
+    }
+
+    private void TextBlock_ContextRequested(object? sender, ContextRequestedEventArgs e)
+    {
+        if (sender is not Control control || control.DataContext is not ClipBoard.ViewModels.ClipGroup clipGroup) return;
+
+        if (clipGroup.IsDefault)
+        {
+            e.Handled = true;
+        }
     }
 }

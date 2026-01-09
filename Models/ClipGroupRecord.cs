@@ -10,7 +10,8 @@ namespace ClipBoard.Models
         [Required][DatabaseGenerated(DatabaseGeneratedOption.Identity)] public int? Id { get; set; }
         [Required] public string Name { get; set; } = "";
         public string? Description { get; set; }
-        public IEnumerable<ClipRecord> Clips { get; set; } = new AvaloniaList<ClipRecord>();
+        public ICollection<ClipRecord> Clips { get; set; } = new List<ClipRecord>();
         [Required] public int SortOrder { get; set; }
+        [Required] public bool IsDefault { get; set; }
     };
 }

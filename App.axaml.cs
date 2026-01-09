@@ -27,8 +27,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-
-
 namespace ClipBoard
 {
     public partial class App : Application
@@ -37,6 +35,8 @@ namespace ClipBoard
         private Window? _MainView;
         private Task? _serverTask;
         private int port = 2380;
+
+        public App() { }
 
         public App(IServiceProvider services)
         {
@@ -64,6 +64,9 @@ namespace ClipBoard
                     Height = 1000,
                     Width = 600
                 };
+
+                var clipboard = new ClipboardService(Services,  _MainView!.Clipboard!);
+                clipboard.Start();
 
                 var app = CreateWebServer();
 
@@ -124,7 +127,7 @@ namespace ClipBoard
                     }
                 )
                 .AddControllers();
-            
+
             var app = builder.Build();
 
             app
@@ -146,14 +149,14 @@ namespace ClipBoard
             return app;
         }
 
-        private void View_Click(object? sender, System.EventArgs e)
+        private void View_Click(object? sender, EventArgs e)
         {
             ToggleClipsView();
         }
-        private void Settings_Click(object? sender, System.EventArgs e)
+        private void Settings_Click(object? sender, EventArgs e)
         {
         }
-        private void Exit_Click(object? sender, System.EventArgs e)
+        private void Exit_Click(object? sender, EventArgs e)
         {
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             {

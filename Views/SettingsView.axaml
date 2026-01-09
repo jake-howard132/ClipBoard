@@ -7,10 +7,13 @@
 		xmlns:vm="using:ClipBoard.ViewModels"
 		x:Class="ClipBoard.Views.SettingsView"
 		x:DataType="vm:SettingsViewModel"
-		Title="ClipBoard Settings" Height="1000" Width="888" >
+		Icon="/Assets/icon.ico"
+		Title="ClipBoard Settings" 
+		Height="1000" 
+		Width="888">
 
 	<Design.DataContext>
-		<vm:SettingsViewModel/>
+		<vm:ViewModelBase/>
 	</Design.DataContext>
 
 	<Grid ColumnDefinitions="Auto, *" RowDefinitions="Auto,*">
@@ -18,7 +21,6 @@
 				BorderThickness="2"
 				Grid.Row="0"
 				Grid.ColumnSpan="2"/>
-
 		<TabControl Grid.Row="1"
 					Grid.Column="0"
 					Width="100">

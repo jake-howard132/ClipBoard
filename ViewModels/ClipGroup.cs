@@ -1,4 +1,5 @@
 ﻿using Avalonia.Collections;
+using Avalonia.Controls;
 using ClipBoard.Models;
 using ClipBoard.Services;
 using Microsoft.Extensions.DependencyInjection;
@@ -27,10 +28,11 @@ namespace ClipBoard.ViewModels
         [Reactive] public AvaloniaList<Clip> Clips { get; set; } = new();
         [Reactive] public int SortOrder { get; set; }
         [Reactive] public bool IsEditing { get; set; }
+        [Reactive] public bool IsDefault { get; set; }
 
         public ReactiveCommand<Unit, Unit> AddClipCommand { get; }
 
-        public ClipGroup(IServiceProvider services, int? id, string name, string description, IEnumerable<Clip> clips, int sortOrder, bool isEditing = false)
+        public ClipGroup(IServiceProvider services, int? id, string name, string description, ICollection<Clip> clips, int sortOrder, bool isEditing = false, bool isDefault = false)
         {
             _services = services;
             this.Id = id;
@@ -39,6 +41,7 @@ namespace ClipBoard.ViewModels
             this.IsEditing = isEditing;
             this.Clips.AddRange(clips);
             this.SortOrder = sortOrder;
+            this.IsDefault = isDefault;
 
             AddClipCommand = ReactiveCommand.CreateFromTask(AddClipAsync);
         }
@@ -76,11 +79,7 @@ namespace ClipBoard.ViewModels
         {
             var clipsRepository = _services.GetRequiredService<ClipsRepository>();
 
-            var clip = new Clip(
-                this._services,
-                (int)this.Id!,
-                this.Clips.Count
-            );
+            var clip = new Clip(this._services, (int)this.Id!);
 
             var record = await clipsRepository.AddClipAsync(clip.ToRecord());
 
@@ -108,8 +107,10 @@ namespace ClipBoard.ViewModels
                 g.Id,
                 g.Name,
                 g.Description ?? "",
-                g.Clips.Select(c => Clip.ToModel(services, c)),
-                g.SortOrder
+                g.Clips.Select(c => Clip.ToModel(services, c)).ToList(),
+                g.SortOrder,
+                false,
+                g.IsDefault
             );
         }
 
@@ -119,7 +120,7 @@ namespace ClipBoard.ViewModels
                 Id = this.Id,
                 Name = this.Name,
                 Description = this.Description,
-                Clips = this.Clips.Select(c => c.ToRecord()),
+                Clips = this.Clips.Select(c => c.ToRecord()).ToList(),
                 SortOrder = this.SortOrder
             };
     }

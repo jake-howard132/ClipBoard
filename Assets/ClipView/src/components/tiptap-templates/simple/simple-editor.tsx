@@ -236,20 +236,6 @@ export function SimpleEditor() {
 			TaskList,
 			TaskItem.configure({ nested: true }),
 			Highlight.configure({ multicolor: true }),
-			Pages.configure({
-        pageFormat: 'A4',
-        header: threeColumnHeaderFooter({
-          left: 'Page header',
-          center: '',
-          right: '',
-        }),
-        footer: threeColumnHeaderFooter({
-          left: 'Page footer',
-          center: '',
-          right: '{page} of {total}',
-        }),
-        pageBreakBackground: '#f7f7f7',
-      })
 			Typography,
 			Superscript,
 			Subscript,

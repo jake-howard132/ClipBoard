@@ -5,19 +5,20 @@
 		mc:Ignorable="d" d:DesignWidth="888" d:DesignHeight="450"
 		xmlns:b="using:ClipBoard.Views.Behaviors"
 		xmlns:vm="using:ClipBoard.ViewModels"
+		xmlns:des="using:ClipBoard._Design"
 		x:Class="ClipBoard.Views.ClipView"
 		x:DataType="vm:Clip"
 		Title="{Binding Name, DataType={x:Type vm:Clip}}" Height="1000" Width="888" Closing="Window_Closing" >
 
 	<Design.DataContext>
-		<vm:Clip/>
+		<des:DesignClip/>
 	</Design.DataContext>
 
 	<Grid ColumnDefinitions="*" RowDefinitions="*, Auto">
 		<Border BorderBrush="White" BorderThickness="2">
 			<WebView x:Name="webView" 
-			VerticalAlignment="Stretch" 
-			HorizontalAlignment="Stretch"/>
+					 VerticalAlignment="Stretch" 
+					 HorizontalAlignment="Stretch"/>
 		</Border>
 	</Grid>
 </Window>
